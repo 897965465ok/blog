@@ -16,9 +16,9 @@
         <!-- <span> 浏览:{{ article.whatch_number }}</span> -->
       </el-row>
     </el-col>
-    <el-col class="card-right" :span="5">
+    <!-- <el-col class="card-right" :span="5">
       <el-image :src="pic" lazy></el-image>
-    </el-col>
+    </el-col> -->
   </el-row>
 </template>
 <script>
@@ -30,8 +30,8 @@ export default {
   },
   async created() {
     // 去除 \ufeff
-    let data = await this.$generateJSON();
-    this.pic = data.imgurl;
+    // let data = await this.$generateJSON();
+    // this.pic = data.imgurl;
   },
   props: ["article"],
   name: "Articler",

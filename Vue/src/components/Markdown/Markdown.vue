@@ -37,7 +37,7 @@ export default {
   .mavonEditor {
     width: 100%;
     height: 100%;
-    background: #FFFFFF;
+    background: #ffffff;
   }
 }
 /deep/.markdown-body pre {

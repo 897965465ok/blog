@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 Vue.use(Router)
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
@@ -27,6 +27,7 @@ export default new Router({
         {
           path: '/login',
           name: 'login',
+          meta: { requiresAuth: true },
           component: () => import('@/components/Login/Login')
         },
 
@@ -44,3 +45,24 @@ export default new Router({
     },
   ]
 })
+//  路由拦击代码
+// router.beforeEach((to, from, next) => {
+//   let result = to.matched.some(record => record.meta.requiresAuth)
+//   // 如果是login就是放行
+//   if (result) {
+//     next()
+//   } else {
+//     // 如果不是login
+//     let token = localStorage.getItem('token')
+//     //如果token 存在
+//     if (token) {
+//       next()
+//     } else {
+//       // 否则让用户登录
+//       next({ path: "/login" })
+//     }
+//   }
+// })
+
+
+export default router
