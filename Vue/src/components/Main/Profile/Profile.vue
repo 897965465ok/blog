@@ -35,16 +35,16 @@ export default {
           icon: "icon-qq",
           link: "http://wpa.qq.com/msgrd?v=3&uin=897965465&site=qq&menu=yes",
         },
-        {
-          title: "Email",
-          icon: "icon-youxiang",
-          link:"Mailto:897965465@qq.com",
-        },
-        {
-          title: "微信",
-          icon: "icon-weixin",
-          link: "",
-        },
+        // {
+        //   title: "Email",
+        //   icon: "icon-youxiang",
+        //   link:"Mailto:897965465@qq.com",
+        // },
+        // {
+        //   title: "微信",
+        //   icon: "icon-weixin",
+        //   link: "",
+        // },
       ],
     };
   },
@@ -87,12 +87,10 @@ export default {
         flex-direction: column;
         text-align: center;
         list-style: none;
-        border-radius: 12%;
-        border: #999 solid 1px;
         cursor: pointer;
         margin: 0px 6px;
         a {
-          color: #999;
+          color: #322931;
           font-size: 16px;
           text-decoration: none;
         }

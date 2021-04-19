@@ -26,7 +26,7 @@ export default {
 .el-container {
   width: 1260px;
   height: 100%;
-  .el-main{
+  .el-main {
     height: 100%;
     width: 100%;
   }

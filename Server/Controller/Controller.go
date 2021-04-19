@@ -331,3 +331,9 @@ func Cookies(ctx *gin.Context) {
 		"Cookie": value,
 	})
 }
+
+// openid
+func Openid(ctx *gin.Context) {
+	ctx.Query("appid")
+
+}

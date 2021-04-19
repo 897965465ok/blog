@@ -16,23 +16,30 @@
         <!-- <span> 浏览:{{ article.whatch_number }}</span> -->
       </el-row>
     </el-col>
-    <!-- <el-col class="card-right" :span="5">
-      <el-image :src="pic" lazy></el-image>
-    </el-col> -->
+    <el-col class="card-right" :span="5">
+      <el-image :src="url" lazy></el-image>
+    </el-col>
   </el-row>
 </template>
 <script>
+import { mapState} from "vuex";
 export default {
   data() {
     return {
-      pic: "",
+      url: "",
     };
   },
-  async created() {
-    // 去除 \ufeff
-    // let data = await this.$generateJSON();
-    // this.pic = data.imgurl;
+  mounted(){
+    let random =  Math.floor(Math.random()*(200 - 1) + 1)
+    this.url = this.pictures[random]
   },
+  computed: mapState({
+    pictures: (state) => (state.pictures.length ? state.pictures : [])
+  }),
+  watch: {
+    pictures: (value) => value
+  },
+
   props: ["article"],
   name: "Articler",
   methods: {
@@ -47,15 +54,25 @@ export default {
 .card-item {
   cursor: pointer;
   height: 140px;
-  margin-bottom: 6px;
+  margin: 6px 0px;
+  padding: 0px 0px 0px 10px;
   border-radius: 5px;
   box-sizing: border-box;
-  border-bottom: 1px solid rgb(238, 238, 238);
+  background-color: rgba(255, 255, 255, 0.904);
+  border: solid 1px #d0cfd0;
+  backdrop-filter: blur(50px);
+  // box-shadow: 3px 3px 3px #00A1D6 ;
+  transition: all 2s;
+
+  &:hover {
+    //  transform: scale(1.1) ;
+  }
   .card-left {
     height: 140px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+
     .paragraph,
     .footer {
       color: #999;

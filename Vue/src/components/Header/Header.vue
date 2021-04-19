@@ -44,6 +44,7 @@ export default {
 
 <style lang="scss" scoped>
 .header {
+    background:#FFFFFF;
   a {
     text-decoration: none;
     font-size: 16px;

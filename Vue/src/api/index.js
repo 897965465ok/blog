@@ -11,14 +11,16 @@ api.interceptors.response.use((config) => {
             }
         }
         case 400: {
-            // Message.error("服务器出错")
+            
+            return config
+        }
+        case 500:{
             return config
         }
         default: {
             return config
         }
     }
-    return config
 },
     (error) => {
 
@@ -34,8 +36,9 @@ api.interceptors.request.use((config) => {
         return config
     }
 }, (error) => {
-    // Do something with request error
     return Promise.reject(error);
 });
 
 export { api }
+
+

@@ -27,10 +27,16 @@ export default {
 .card-item {
   cursor: pointer;
   height: 80px;
-  margin: 0px 0px 6px 6px;
+  margin: 6px 0px;
+  padding: 0px  10px;
   border-radius: 5px;
   box-sizing: border-box;
   border-bottom: 1px solid rgb(238, 238, 238);
+  border: solid 1px #999;
+  transition: all 1s;
+   &:hover{
+     transform: scale(1.1) ;
+  }
   .card-left {
     height: 80px;
     display: flex;

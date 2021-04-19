@@ -50,6 +50,7 @@ export default {
 
 <style lang="scss" scoped>
 .footer {
+    background:#FFFFFF;
   a {
     text-decoration: none;
     font-size: 16px;

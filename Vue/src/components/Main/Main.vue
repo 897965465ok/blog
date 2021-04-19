@@ -10,7 +10,7 @@
             :article="item"
           ></Articler>
           <h3 class="sub-title">#博主推荐</h3>
-          <Carousel ></Carousel>
+          <Carousel></Carousel>
           <Articler
             v-for="item in articles.slice(4, 9)"
             :key="item.uuid"
@@ -86,36 +86,26 @@ export default {
     };
   },
 
-  async created() {
-    await this.getjson();
-    await this.getTages();
-    await this.changeAll((await this.$api.get("v1/articles")).data.result);
+  created() {
+    this.start();
     loading.close();
   },
   computed: mapState({
-    pictures: (state) => (state.pictures.length ? state.pictures : []),
     articles: (state) => (state.articlers.length ? state.articlers : []),
   }),
-  watch: {
-    pictures: (value) => value,
-  },
+
   components: {
     Carousel,
     Profile,
   },
   methods: {
     ...mapActions(["changeAll", "getPictures", "setRecommen"]),
-    async getjson() {
-      for (let index = 0; index < 5; index++) {
-        let item = await this.$generateJSON();
-        await this.getPictures(item);
-      }
-    },
-    async getTages() {
-      this.setRecommen({
-        tags: (await this.$api.get("v1/tags")).data.result,
-        imagUrl: (await this.$generateJSON()).imgurl,
+    async start() {
+      await this.getPictures(await this.$GetUrl());
+      await this.setRecommen({
+        tags: (await this.$api.get("v1/tags")).data.result
       });
+      await this.changeAll((await this.$api.get("v1/articles")).data.result);
     },
   },
 };
@@ -124,6 +114,7 @@ export default {
 <style lang="scss" scoped>
 .main {
   height: 100%;
+  background: #ffffff;
   .main-header {
     height: 300px;
     box-sizing: border-box;
@@ -133,9 +124,11 @@ export default {
   }
   .content-left {
     min-height: 1650px;
+    .card-wrapper {
+      padding: 16px;
+    }
   }
   .revert-wrapper {
-    // padding: 6px;
     border-bottom: 1px solid #999;
     .message-wrapper {
       margin: 5px 0px;

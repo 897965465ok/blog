@@ -64,6 +64,7 @@ func CollectRouter(r *gin.Engine) *gin.Engine {
 		V1.GET("/PayCallBack", controller.PayCallBack)
 		// cookies
 		V1.GET("/cookies", controller.Cookies)
+		V1.GET("/openid", controller.Cookies)
 	}
 	return r
 }

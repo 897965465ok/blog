@@ -23,8 +23,9 @@ const store = new Vuex.Store({
     CHANGE_ALL(state, articlers) {
       state.articlers = articlers
     },
-    GET_PICTURES(state, url) {
-      state.pictures.push(url)
+    GET_PICTURES(state, result) {
+      
+      state.pictures= result.data.hits.map(url=> url.largeImageURL)
     },
     SET_RECOMMEN(state, recommen) {
       state.recommen = { ...recommen }
@@ -37,8 +38,8 @@ const store = new Vuex.Store({
     async changeAll(context, data) {
       context.commit("CHANGE_ALL", data)
     },
-    async getPictures(context, url) {
-      context.commit("GET_PICTURES", url)
+    async getPictures(context, result) {
+      context.commit("GET_PICTURES", result)
     },
     async setRecommen(context, recommen) {
       context.commit("SET_RECOMMEN", recommen)

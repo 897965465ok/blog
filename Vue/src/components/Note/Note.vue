@@ -131,7 +131,12 @@ export default {
 
 <style lang="scss" scoped>
 .main {
-  height: 100vh;
+  height: 100%;
+  background: #ffffff;
+  .content-left {
+    padding: 16px;
+  }
+
   .el-menu--horizontal > .el-menu-item {
     height: 35px;
     line-height: 35px;
