@@ -15,11 +15,13 @@
           </el-menu>
         </el-row>
         <el-row class="card-wrapper">
+          
           <Articler
             v-for="item in tmp"
             :key="item.uuid"
             :article="item"
           ></Articler>
+
         </el-row>
         <el-row>
           <el-col class="pagination">
@@ -40,9 +42,9 @@
           :key="item.uuid"
           :article="item"
         ></ReArticle>
-        <el-row>
+        <!-- <el-row>
           <el-image v-if="recommen.imagUrl" :src="recommen.imagUrl"></el-image>
-        </el-row>
+        </el-row> -->
         <!-- <h3 class="sub-title">#热门标签</h3>
         <el-row class="friends-link">
           <waterfall :col="3" :data="favorites" :gutterWidth="10">
@@ -67,8 +69,6 @@ export default {
   name: "note",
   data() {
     return {
-      applet: "",
-      revert: [],
       favorites: [
         {
           userName: "动漫之家",
@@ -81,7 +81,9 @@ export default {
     };
   },
   async mounted() {
+
     await this.setSimilar([]);
+
   },
 
   computed: {
@@ -90,12 +92,14 @@ export default {
       articles: (state) => (state.articlers.length ? state.articlers : []),
       similar: (state) => (state.similar.length ? state.similar : []),
     }),
+    // 监听
     listen() {
       return {
         articles: this.articles,
         similar: this.similar,
       };
     },
+    // 获取数量
     len() {
       return this.similar.length
         ? Math.ceil(this.similar.length / 8)
@@ -113,12 +117,14 @@ export default {
   methods: {
     ...mapActions(["setSimilar"]),
     change(index) {
-      let start = index - 1;
-      let end = index + 6;
+      let end  =  index * 6
+      let start =   end - 6
       this.tmp =
         this.similar.length > 0
           ? this.similar.slice(start, end)
           : this.articles.slice(start, end);
+
+      
     },
     async check(articleTag) {
       this.current = 0;

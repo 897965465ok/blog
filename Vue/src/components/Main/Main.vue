@@ -9,7 +9,7 @@
             :key="item.uuid"
             :article="item"
           ></Articler>
-          <h3 class="sub-title">#博主推荐</h3>
+          <h3 class="sub-title">#轮播图</h3>
           <Carousel></Carousel>
           <Articler
             v-for="item in articles.slice(4, 9)"
@@ -30,7 +30,7 @@
           :key="item.uuid"
           :article="item"
         ></ReArticle>
-        <h3 class="sub-title">#小程序</h3>
+        <h3 class="sub-title">#图片占位</h3>
         <el-row>
           <el-image
             src="https://tva2.sinaimg.cn/large/87c01ec7gy1frmmz605z4j21kw0w0qvh.jpg"
@@ -81,6 +81,11 @@ export default {
           userName: "动漫之家",
           id: 120,
           link: "http://www.imomoe.ai",
+        },
+         {
+          userName: "bilibili",
+          id: 120,
+          link: "https://www.bilibili.com/",
         },
       ],
     };
