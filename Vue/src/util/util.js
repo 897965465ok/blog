@@ -34,7 +34,7 @@ export default {
 
         Vue.prototype.$GetUrl = async ()=>{
             try {
-               return (await axios.get('/getImgUrl',{params:{
+               return (await axios.get('https://pixabay.com/api',{params:{
                    key: "21226858-57a14a3bedc89005c85e668cc",
                    per_page:200,
                    category:"nature",

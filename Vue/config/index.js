@@ -19,14 +19,14 @@ module.exports = {
           '^/v1': "/v1"                  //如果地址不想带api就这样替换掉
         }
       },
-      '/getImgUrl': {
-        target: 'https://pixabay.com/api',  //目标接口域名
-        changeOrigin: true,  //是否跨域
-        secure: false, // 如果是 https ,需要开启这个选项
-        pathRewrite: {
-          '^/getImgUrl': ""                  //如果地址不想带api就这样替换掉
-        }
-      }
+      // 'https://pixabay.com/api': {
+      //   target: 'https://pixabay.com/api',  //目标接口域名
+      //   changeOrigin: true,  //是否跨域
+      //   secure: false, // 如果是 https ,需要开启这个选项
+      //   pathRewrite: {
+      //     '^/https://pixabay.com/api': ""                  //如果地址不想带api就这样替换掉
+      //   }
+      // }
     },
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

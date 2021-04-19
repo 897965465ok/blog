@@ -86,8 +86,12 @@ export default {
     };
   },
 
-  created() {
-    this.start();
+ async  created() {
+    await this.getPictures(await this.$GetUrl());
+      await this.setRecommen({
+        tags: (await this.$api.get("v1/tags")).data.result
+      });
+      await this.changeAll((await this.$api.get("v1/articles")).data.result);
     loading.close();
   },
   computed: mapState({
@@ -99,14 +103,7 @@ export default {
     Profile,
   },
   methods: {
-    ...mapActions(["changeAll", "getPictures", "setRecommen"]),
-    async start() {
-      await this.getPictures(await this.$GetUrl());
-      await this.setRecommen({
-        tags: (await this.$api.get("v1/tags")).data.result
-      });
-      await this.changeAll((await this.$api.get("v1/articles")).data.result);
-    },
+    ...mapActions(["changeAll", "getPictures", "setRecommen"])
   },
 };
 </script>
