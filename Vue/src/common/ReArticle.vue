@@ -2,10 +2,10 @@
   <el-row class="card-item"  @click.native="readArticler(article.article_path)">
     <el-col class="card-left">
       <el-row class="title">
-        <h4>{{ article.name }}</h4>
+        <h4>{{ article.name.replace('.md','') }}</h4>
       </el-row>
       <el-row class="footer">
-        <span>{{ article.CreatedAt }}</span>
+        <!-- <span>{{ article.CreatedAt }}</span> -->
         <!-- <span> 浏览: {{ article.whatch_number }}</span> -->
       </el-row>
     </el-col>
@@ -26,19 +26,17 @@ export default {
 <style lang="scss" scoped>
 .card-item {
   cursor: pointer;
-  height: 80px;
-  margin: 6px 0px;
-  padding: 0px  10px;
-  border-radius: 5px;
+  height: 40px;
   box-sizing: border-box;
-  border-bottom: 1px solid rgb(238, 238, 238);
-  border: solid 1px #999;
-  transition: all 1s;
-   &:hover{
-     transform: scale(1.1) ;
-  }
+  background-color: #fff;
+  border: none;
+  border-bottom: solid 1px #999;
+   &:hover {
+      color: #52a8ff;
+          background: #F4F5F5;
+    }
   .card-left {
-    height: 80px;
+    height: 40px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;

@@ -1,19 +1,17 @@
 <template>
-
   <el-row class="card-item" @click.native="readArticler(article.article_path)">
     <el-col class="card-left" :span="19">
       <el-row class="tager">
-        <span>#</span>
         <span>{{ article.tag }}</span>
       </el-row>
       <el-row class="title"
-        ><h4>{{ article.name }}</h4></el-row
+        ><h4>{{ article.name.replace(".md", "") }}</h4></el-row
       >
       <el-row class="paragraph">
-        <!-- {{ article.article_path }} -->
+        {{ article.article_path }}
       </el-row>
       <el-row class="footer">
-        <span>{{ article.CreatedAt }}</span>
+        <!-- <span>{{ article.CreatedAt }}</span> -->
         <!-- <span> 浏览:{{ article.whatch_number }}</span> -->
       </el-row>
     </el-col>
@@ -23,22 +21,22 @@
   </el-row>
 </template>
 <script>
-import { mapState} from "vuex";
+import { mapState } from "vuex";
 export default {
   data() {
     return {
       url: "",
     };
   },
-  mounted(){
-    let random =  Math.floor(Math.random()*(200 - 1) + 1)
-    this.url = this.pictures[random]
+  mounted() {
+    let random = Math.floor(Math.random() * (200 - 1) + 1);
+    this.url = this.pictures[random];
   },
   computed: mapState({
-    pictures: (state) => (state.pictures.length ? state.pictures : [])
+    pictures: (state) => (state.pictures.length ? state.pictures : []),
   }),
   watch: {
-    pictures: (value) => value
+    pictures: (value) => value,
   },
 
   props: ["article"],
@@ -55,25 +53,35 @@ export default {
 .card-item {
   cursor: pointer;
   height: 140px;
-  margin: 6px 0px;
-  padding: 0px 0px 0px 10px;
-  border-radius: 5px;
+  margin: 1px 0px;
+  padding: 6px 0px;
   box-sizing: border-box;
-  background-color: rgba(255, 255, 255, 0.904);
-  border: solid 1px #d0cfd0;
-  backdrop-filter: blur(50px);
-  // box-shadow: 3px 3px 3px #00A1D6 ;
-  transition: all 2s;
-
-  &:hover {
-    //  transform: scale(1.1) ;
+  background-color: #fff;
+  border: none;
+  border-bottom: solid 1px #999;
+   &:hover {
+      background: #F4F5F5;
+    }
+  .tager {
+    font-size: 14px;
+    color: #999;
+    &:hover {
+      color: #52a8ff;
+    }
   }
   .card-left {
     height: 140px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-
+    .title {
+      font-size: 16px;
+      color: #333;
+      font-weight: 700;
+      &:hover {
+        color: #52a8ff;
+      }
+    }
     .paragraph,
     .footer {
       color: #999;
@@ -84,9 +92,14 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    .el-image {
+      height: 100%;
+      width: 100%;
+      border-radius: 5px;
+    }
     img {
-      height: 90%;
-      width: 90%;
+      height: 100%;
+      width: 100%;
     }
   }
 }

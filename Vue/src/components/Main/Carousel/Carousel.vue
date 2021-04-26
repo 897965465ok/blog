@@ -25,9 +25,9 @@ export default {
     pictures: (state) => (state.pictures.length ? state.pictures : []),
   }),
   watch: {
-    pictures: function(value) {
-      let random =  Math.floor(Math.random()*(195 - 1) + 1)
-      this.carouselUrl = value.slice(random,random+5);
+    pictures: function (value) {
+      let random = Math.floor(Math.random() * (195 - 1) + 1);
+      this.carouselUrl = value.slice(random, random + 5);
       return value;
     },
   },
@@ -35,6 +35,7 @@ export default {
 </script>
 <style>
 .carousel {
+  width: 100%;
   border-radius: 5px;
 }
 .el-carousel__item h3 {

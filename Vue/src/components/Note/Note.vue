@@ -36,7 +36,7 @@
         </el-row>
       </el-col>
       <el-col class="content-right" :span="8">
-        <h3 class="sub-title">#精选文章</h3>
+
         <ReArticle
           v-for="item in articles.slice(9, 14)"
           :key="item.uuid"

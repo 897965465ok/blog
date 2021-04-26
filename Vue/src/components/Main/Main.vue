@@ -3,13 +3,13 @@
     <el-row class="main-content">
       <el-col class="content-left" :span="16">
         <el-row class="card-wrapper">
-          <h3 class="sub-title">#最新文章</h3>
+
           <Articler
             v-for="item in articles.slice(0, 4)"
             :key="item.uuid"
             :article="item"
           ></Articler>
-          <h3 class="sub-title">#轮播图</h3>
+         
           <Carousel></Carousel>
           <Articler
             v-for="item in articles.slice(4, 9)"
@@ -24,13 +24,13 @@
             <Profile></Profile>
           </el-col>
         </el-row>
-        <h3 class="sub-title">#特别推荐</h3>
+      
         <ReArticle
           v-for="item in articles.slice(9, 16)"
           :key="item.uuid"
           :article="item"
         ></ReArticle>
-        <h3 class="sub-title">#图片占位</h3>
+   
         <el-row>
           <el-image
             src="https://tva2.sinaimg.cn/large/87c01ec7gy1frmmz605z4j21kw0w0qvh.jpg"
@@ -38,7 +38,7 @@
             lazy
           ></el-image>
         </el-row>
-        <h3 class="sub-title">#个人收藏网站</h3>
+    
         <el-row class="favorites-link">
           <waterfall :col="3" :data="favorites" :gutterWidth="10">
             <div
@@ -127,7 +127,7 @@ export default {
   .content-left {
     min-height: 1650px;
     .card-wrapper {
-      padding: 16px;
+      padding: 12px;
     }
   }
   .revert-wrapper {

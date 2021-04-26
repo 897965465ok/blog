@@ -12,6 +12,7 @@ export default {
 * {
   margin: 0px;
   padding: 0px;
+  font-family: "Microsoft Yahei";
 }
 body {
   background-color: #f7f4f4;
