@@ -1,5 +1,6 @@
 # class
 
+```
 super作为函数
 
 super作为对象
@@ -11,3 +12,4 @@ super作为对象
  private只能在本类中操作
 
  protected受保护的
+```

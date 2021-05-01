@@ -259,9 +259,9 @@ func DeleteFavorite(ctx *gin.Context) {
 	})
 }
 
-// 动态解析json
-func ParserJson(ctx *gin.Context) {
-	response, err := http.Get("https://api.ixiaowai.cn/gqapi/gqapi.php?return=json")
+// 解析Wallhaven
+func Wallhaven(ctx *gin.Context) {
+	response, err := http.Get("https://wallhaven.cc/api/v1/search")
 	if err != nil || response.StatusCode != http.StatusOK {
 		ctx.Status(http.StatusServiceUnavailable) // 503
 		return
@@ -274,13 +274,15 @@ func ParserJson(ctx *gin.Context) {
 	// 	fmt.Println(string(key), string(value))
 	// 	return nil
 	// })
-	value, _ := jsonparser.ParseString(bytes.TrimPrefix(str, []byte{239, 187, 191}))
+	data, _ := jsonparser.ParseString(str)
 	ctx.JSON(http.StatusOK, gin.H{
-		"content": value,
+		"code":   200,
+		"result": data,
 	})
 
 }
 
+// 支付测试接口
 func Pay(ctx *gin.Context) {
 	var privateKey string = viper.GetString("privateKey")
 	var publieKey string = viper.GetString("publieKey")

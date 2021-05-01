@@ -1,6 +1,7 @@
-# TS高级类型
+# TS 高级类型
 
 //高级类型
+
 ```
 const mergeFunc = <T,U>(message:T , message2:U): T&U =>{
 let result =   <T & U> {}

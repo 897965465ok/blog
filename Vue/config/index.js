@@ -27,6 +27,14 @@ module.exports = {
       //     '^/https://pixabay.com/api': ""                  //如果地址不想带api就这样替换掉
       //   }
       // }
+    '/wallhaven':{
+      target: 'https://wallhaven.cc/api/v1/search',  //目标接口域名
+        changeOrigin: true,  //是否跨域
+        secure: true, // 如果是 https ,需要开启这个选项
+        pathRewrite: {
+          '^/wallhaven': ""                  //如果地址不想带api就这样替换掉
+        }
+      }
     },
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

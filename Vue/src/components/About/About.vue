@@ -34,7 +34,7 @@
         <span>工作经历</span>
         <el-row class="text">
           <p>微致汇网络科技有限公司</p>
-          <p>2019年3月|二年工作经验</p>
+          <p>2019年3月|一年工作经验</p>
         </el-row>
       </el-col>
     </el-row>

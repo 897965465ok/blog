@@ -9,7 +9,7 @@
 
 
 
-```
+```golang
 	const fileName string = "abc.txt" //定义常量
     //定义后无法在次修改  	fileName = "123" 错误
 

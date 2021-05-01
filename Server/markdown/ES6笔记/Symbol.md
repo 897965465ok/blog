@@ -1,5 +1,5 @@
 # Symbol
-```javascript
+```
 const s = Symbol('www.baidu.com')
 
  console.log(s.toString())

@@ -30,10 +30,6 @@ export default {
         link: "/note",
       },
       {
-        title: "关于我",
-        link: "/about",
-      },
-      {
         title: "登陆",
         link: "/login",
       },
@@ -44,7 +40,7 @@ export default {
 
 <style lang="scss" scoped>
 .header {
-    background:#FFFFFF;
+  background: #ffffff;
   a {
     text-decoration: none;
     font-size: 16px;
@@ -58,9 +54,9 @@ export default {
       height: 100%;
     }
   }
-
   .el-menu--horizontal {
     border: none;
+    float: right;
   }
 }
 </style>

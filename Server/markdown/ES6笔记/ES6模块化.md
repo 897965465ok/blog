@@ -1,4 +1,4 @@
-# ES6模块化
+# ES6 模块化
 
 ## 语法
 
@@ -7,14 +7,14 @@
 ```
 //a.js
 
-//导出方式1 
-export let   firstName = 'Michael';
-export let   lastName = 'Jackson';
-export let  year = 1958;
+//导出方式1
+export let firstName = "Michael";
+export let lastName = "Jackson";
+export let year = 1958;
 //导出方式2
 let oox = 10;
-let name = '小明' 
-export {oox,name}
+let name = "小明";
+export { oox, name };
 ```
 
 ## 相应的接收方式
@@ -22,17 +22,17 @@ export {oox,name}
 ```
 // index.js
 
-import {year,firstName,lastName,oox,name} from './a.js'
+import { year, firstName, lastName, oox, name } from "./a.js";
 
-console.log(year,firstName,lastName,oox,name)
+console.log(year, firstName, lastName, oox, name);
 ```
 
-# 别名as
+# 别名 as
 
 ```
 //在导出端用法
 let a = 10;
-export { 
+export {
     a as b
     a as c
 }
@@ -44,10 +44,10 @@ export {
 # export default
 
 ```
-//规则只能导出一个 
-export default a 
+//规则只能导出一个
+export default a
 export default {} //对象
 
-相应接受规则 可以自定义变量 
+相应接受规则 可以自定义变量
  import a form './a.js'
 ```

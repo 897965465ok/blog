@@ -1,4 +1,6 @@
 import axios from 'axios'
+// 如果前端配置了这个withCredentials=true，后段设置Access-Control-Allow-Origin不能为 " * ",必须是你的源地址啊
+// axios.defaults.withCredentials=true
 export default {
     install: function (Vue, options) {
         // 1. 添加全局方法或属性
@@ -31,21 +33,43 @@ export default {
                 return false
             }
         }
-
-        Vue.prototype.$GetUrl = async ()=>{
+          
+        Vue.prototype.$ajax = (url) => {
+            return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.open('GET',url);
+                xhr.setRequestHeader('Accept', 'application/json');
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState !== 4) return;
+                    if (xhr.status === 200 || xhr.status === 304) {
+                        try {
+                            resolve(JSON.parse(xhr.responseText));
+                        } catch (error) {
+                            resolve(xhr.responseText);
+                        }
+                    } else {
+                        reject(new Error(xhr.responseText));
+                    }
+                }
+                xhr.send();
+            })
+        }
+        Vue.prototype.$GetUrl = async () => {
             try {
-               return (await axios.get('https://pixabay.com/api',{params:{
-                   key: "21226858-57a14a3bedc89005c85e668cc",
-                   per_page:200,
-                   category:"nature",
-                   safesearch:true
-                }}))
+                return (await axios.get('https://pixabay.com/api', {
+                    params: {
+                        key: "21226858-57a14a3bedc89005c85e668cc",
+                        per_page: 200,
+                        //    q:"(cosplay)",
+                        category: "nature",
+
+                        safesearch: true
+                    }
+                }))
             } catch (e) {
                 return false
             }
         }
-
-
         // 当持续触发事件时，一定时间段内没有再触发事件，事件处理函数才会执行一次，
         // 如果设定的时间到来之前，又一次触发了事件，就重新开始延时
         Vue.prototype.$debounce = function (fun, t, tagerNow) {

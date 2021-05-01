@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "20716362",
+      "name": "时 间",
+      "font_class": "shijian",
+      "unicode": "e731",
+      "unicode_decimal": 59185
+    },
+    {
+      "icon_id": "436017",
+      "name": "阅读",
+      "font_class": "yuedu",
+      "unicode": "e806",
+      "unicode_decimal": 59398
+    },
+    {
+      "icon_id": "640103",
+      "name": "赞",
+      "font_class": "zan",
+      "unicode": "e65e",
+      "unicode_decimal": 58974
+    },
+    {
+      "icon_id": "5594150",
+      "name": "爱心",
+      "font_class": "weibiaoti-",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
       "icon_id": "591660",
       "name": "技能",
       "font_class": "jineng-copy",

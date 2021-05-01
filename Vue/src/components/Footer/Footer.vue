@@ -36,10 +36,6 @@ export default {
         link: "/note",
       },
       {
-        title: "关于我",
-        link: "/about",
-      },
-      {
         title: "登陆",
         link: "/login",
       },

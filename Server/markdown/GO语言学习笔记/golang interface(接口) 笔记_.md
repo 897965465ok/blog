@@ -1,31 +1,22 @@
 # golang interface(接口) 笔记
 
+### 概念
 
-  ### 概念
-
-
-
-```
+```golang
 在Go中，接口是一组方法签名。
 接口定义行为 ，具体的实现行为取决于对象
 接口就像是一个约束 满足约束的 就属于此类接口
 ```
 
-
-  ### 知识点
-
-
+### 知识点
 
 1. 规定与实现
 2. 嵌套
 3. 断言
 
+## 规定与实现
 
-  ## 规定与实现
-
-
-
-```
+```golang
 package main
 
 import "fmt"
@@ -82,12 +73,9 @@ func main() {
 }
 ```
 
+## 嵌套
 
-  ## 嵌套
-
-
-
-```
+```golang
 package main
 
 import "fmt"
@@ -145,12 +133,9 @@ func main() {
 }
 ```
 
+### 空接口断言
 
-  ### 空接口断言
-
-
-
-```
+```golang
 	/ 定义一个空接口
 	var ovid interface{}
 	var four int = 5

@@ -9,7 +9,8 @@ const store = new Vuex.Store({
     tags: [],
     similar: [],
     recommen: {},
-    token: ""
+    token: "",
+    router:[]
   },
   getters: {
     token(state) {

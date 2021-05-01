@@ -7,7 +7,7 @@
 
 
 
-```javascript
+```
 () => {
 
 }
@@ -18,7 +18,7 @@
 
 
 
-```javascript
+```
 message => {
 
 }
@@ -29,7 +29,7 @@ message => {
 
 
 
-```javascript
+```
 message =>  message * 3 
 message = > ({  //注意这个是代码块返回的是一个对象
     age : 18,
@@ -42,7 +42,7 @@ message = > ({  //注意这个是代码块返回的是一个对象
 
 
 
-```javascript
+```
    setInterval//在默认情况下指向windows
    let test = {
         set() {

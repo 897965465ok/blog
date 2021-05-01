@@ -11,10 +11,10 @@ api.interceptors.response.use((config) => {
             }
         }
         case 400: {
-            
+
             return config
         }
-        case 500:{
+        case 500: {
             return config
         }
         default: {

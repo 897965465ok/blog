@@ -9,7 +9,7 @@
 ## 语法
 
 
-```javascript
+```
    let test = new Promise((resolve, reject) => {
             console.log('我在new的时候执行')
             if (true) {
@@ -25,7 +25,7 @@
 ##使用方法
 
 
-```javascript
+```
    function loadImg(url) {
        return new Promise((resolve, reject) => {
            let img = new Image();
@@ -50,7 +50,7 @@
 ## promise.all()  作用(并发) 多个实例一起调用返回结果
 
 
-```javascript
+```
 let a = Promise.resolve('aaa')
  //快速创建实例 等于   new Promise((resolve,reject)=>{ resolve('aaa'))
 let b = Promise.reject('bbb')
@@ -66,7 +66,7 @@ c.then(value=>{
 ## Promise.race()
 
 
-```javascript
+```
 
 let a = Promise.resolve('aaa')
 let b = Promise.reject('bbb')
@@ -82,7 +82,7 @@ c.then(value=>{
 # 状态的传递  有点恶心
 
 
-```javascript
+```
   p1 = new Promise(function (resolve, reject) {
             setTimeout(() => resolve('我是p1错误的回调'), 3000)
         })

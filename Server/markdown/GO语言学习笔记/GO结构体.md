@@ -5,7 +5,7 @@
 
 
 
-```
+```golang
 type Proson struct {  //定义结构体
 	name string
 	age  int
@@ -18,7 +18,7 @@ type Proson struct {  //定义结构体
 
 
 
-```
+```golang
 	//定义方法1
 	var john Proson
 	john.name = "john"
@@ -69,7 +69,7 @@ type Proson struct {  //定义结构体
 
 
 
-```
+```golang
 //给结构体声明犯法
 func (node *Proson) setvalue(age int) { //node 这个参数传的是地址
 	node.age = age

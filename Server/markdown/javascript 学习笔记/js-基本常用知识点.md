@@ -20,7 +20,7 @@ parseInt("px12")=>12
 
 ---
 
-
+```
 获取数组最大最小值:
 
 方法1：//利用 max ,min 会把数组当字符串传过去
@@ -256,14 +256,14 @@ for (var i = 0; i < ary.length; i++) {
 
 var cur=ary[i];
 
-```
+
    if (typeof boj[cur]!=="undefined") {
    	ary[i]=ary[ary.length-1];
    	ary.length--;
    	i--;
    	continue;
    }
-```
+
 
 obj[cur]=cur;
 

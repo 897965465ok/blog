@@ -54,10 +54,12 @@ func CollectRouter(r *gin.Engine) *gin.Engine {
 		V1.POST("/register", controller.Register)
 		// 登陆
 		V1.POST("/login", controller.Login)
-		// 线上接口
+		// 人家服务器接口已废除
 		V1.GET("/returnjson", controller.ReturnJson)
-		// 正常接口
-		V1.GET("/parserJson", controller.ParserJson)
+
+		//Wallhaven接口
+		V1.GET("/wallhaven", controller.Wallhaven)
+
 		// 支付宝测试接口
 		V1.GET("/play", controller.Pay)
 		// 支付宝回调接口
@@ -65,6 +67,7 @@ func CollectRouter(r *gin.Engine) *gin.Engine {
 		// cookies
 		V1.GET("/cookies", controller.Cookies)
 		V1.GET("/openid", controller.Cookies)
+
 	}
 	return r
 }
