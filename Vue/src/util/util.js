@@ -34,33 +34,13 @@ export default {
             }
         }
           
-        Vue.prototype.$ajax = (url) => {
-            return new Promise((resolve, reject) => {
-                const xhr = new XMLHttpRequest();
-                xhr.open('GET',url);
-                xhr.setRequestHeader('Accept', 'application/json');
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState !== 4) return;
-                    if (xhr.status === 200 || xhr.status === 304) {
-                        try {
-                            resolve(JSON.parse(xhr.responseText));
-                        } catch (error) {
-                            resolve(xhr.responseText);
-                        }
-                    } else {
-                        reject(new Error(xhr.responseText));
-                    }
-                }
-                xhr.send();
-            })
-        }
         Vue.prototype.$GetUrl = async () => {
             try {
                 return (await axios.get('https://pixabay.com/api', {
                     params: {
                         key: "21226858-57a14a3bedc89005c85e668cc",
                         per_page: 200,
-                        //    q:"(cosplay)",
+                        //    q:"",
                         category: "nature",
 
                         safesearch: true

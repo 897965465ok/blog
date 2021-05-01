@@ -1,7 +1,7 @@
 <template>
-  <el-row class="main">
+  <el-row class="main" >
     <el-row class="main-content">
-      <el-col class="content-left" :span="16">
+      <el-col class="content-left" :style="{'min-height': leftHight }"  :span="16">
         <el-row>
           <el-menu mode="horizontal">
             <el-menu-item
@@ -15,28 +15,25 @@
           </el-menu>
         </el-row>
         <el-row class="card-wrapper">
-          
           <Articler
-            v-for="item in tmp"
+            v-for="item in temporary"
             :key="item.uuid"
             :article="item"
           ></Articler>
-
         </el-row>
-        <el-row>
-          <el-col class="pagination">
-            <el-pagination
-              @current-change="change"
-              layout="prev, pager, next"
-              :current-page="current"
-              :page-count="len"
-            >
-            </el-pagination>
-          </el-col>
-        </el-row>
+         <div style="height:25px;"></div>
+        <el-col class="pagination">
+          <el-pagination
+            @current-change="change"
+            layout="prev, pager, next"
+            :current-page="current"
+            :page-count="len"
+          >
+          </el-pagination>
+        </el-col>
       </el-col>
-      <el-col class="content-right" :span="8">
 
+      <el-col class="content-right" :span="8">
         <ReArticle
           v-for="item in articles.slice(9, 14)"
           :key="item.uuid"
@@ -76,14 +73,13 @@ export default {
           link: "链接",
         },
       ],
-      tmp: [],
+      temporary: [],
+      leftHight: 0,
       current: 1,
     };
   },
   async mounted() {
-
     await this.setSimilar([]);
-
   },
 
   computed: {
@@ -108,23 +104,26 @@ export default {
   },
   watch: {
     listen(listen) {
-      this.tmp =
+      this.temporary =
         listen.similar.length > 0
           ? listen.similar.slice(0, 7)
           : listen.articles.slice(0, 7);
+      if (this.temporary.length < 6) {
+        this.leftHight = 145 * 6 + "px";
+      } else {
+        this.leftHight = 145 * this.temporary.length + "px";
+      }
     },
   },
   methods: {
     ...mapActions(["setSimilar"]),
     change(index) {
-      let end  =  index * 6
-      let start =   end - 6
-      this.tmp =
+      let end = index * 6;
+      let start = end - 6;
+      this.temporary =
         this.similar.length > 0
           ? this.similar.slice(start, end)
           : this.articles.slice(start, end);
-
-      
     },
     async check(articleTag) {
       this.current = 0;
@@ -137,12 +136,15 @@ export default {
 
 <style lang="scss" scoped>
 .main {
-  height: 100%;
   background: #ffffff;
   .content-left {
     padding: 16px;
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
   }
-
   .el-menu--horizontal > .el-menu-item {
     height: 35px;
     line-height: 35px;
@@ -165,6 +167,8 @@ export default {
   .pagination {
     display: flex;
     justify-content: center;
+    position: absolute;
+    bottom: 0px;
   }
 }
 </style>

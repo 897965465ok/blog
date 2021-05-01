@@ -36,6 +36,7 @@ export default {
 <style>
 .carousel {
   width: 100%;
+  margin:10px 0px;  
   border-radius: 5px;
 }
 .el-carousel__item h3 {

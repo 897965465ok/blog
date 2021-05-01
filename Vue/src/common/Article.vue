@@ -65,8 +65,7 @@ export default {
 @import "../assets/icon/iconfont.css";
 .card-item {
   cursor: pointer;
-  height: 150px;
-  margin: 0 0 0 -16px;
+  height: 135px;
   box-sizing: border-box;
   background-color: #fff;
   border: none;
@@ -74,7 +73,7 @@ export default {
   display: flex;
   align-items: center;
   .item-wrapper {
-    height: 120px;
+    height: 115px;
     width: 100%;
     .card-left {
       height: 100%;
