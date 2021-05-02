@@ -46,7 +46,7 @@
               v-for="(item, index) in favorites"
               :key="index"
             >
-              <el-button>
+              <el-button @click.native="$skip(item.link)">
                 {{ item.userName }}
               </el-button>
             </div>
@@ -78,14 +78,19 @@ export default {
       loading: null,
       favorites: [
         {
-          userName: "动漫之家",
-          id: 120,
+          userName: "樱花动漫",
+          id: 1,
           link: "http://www.imomoe.ai",
         },
          {
           userName: "bilibili",
-          id: 120,
+          id: 2,
           link: "https://www.bilibili.com/",
+        },
+          {
+          userName: "酷动漫",
+          id: 3,
+          link: "http://www.cgdm.net/",
         },
       ],
     };

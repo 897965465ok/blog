@@ -7,12 +7,8 @@ import ElementUI from 'element-ui';
 import { api } from './api'
 import store from './store/store'
 import waterfall from 'vue-waterfall2'
-import mavonEditor from 'mavon-editor'
-import 'mavon-editor/dist/css/index.css'
-// use
 import './common'
 import util from './util/util'
-Vue.use(mavonEditor)
 Vue.use(ElementUI);
 Vue.use(waterfall)
 Vue.use(util)

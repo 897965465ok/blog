@@ -1,22 +1,22 @@
 <template>
-  <div class="markdown">
-    <mavon-editor
-      v-model="content"
-      :subfield="false"
-      :editable="false"
-      :toolbarsFlag="false"
-      :boxShadow="false"
-      defaultOpen="preview"
-      codeStyle="vs2015"
-    />
-  </div>
+  <Markdown
+    class="markdown"
+    v-model="markdown"
+    isPreview
+    :height="1200"
+  >
+  </Markdown>
 </template>
 <script>
+import Markdown from "vue-meditor";
 export default {
   name: "About",
+  components: {
+    Markdown,
+  },
   data() {
     return {
-      content: "",
+      markdown: "",
     };
   },
   async created() {
@@ -25,7 +25,7 @@ export default {
       ""
     );
     let { data } = await this.$api.get("/v1" + articlerPath);
-    this.content = data;
+    this.markdown = data;
   },
 };
 </script>
@@ -33,14 +33,5 @@ export default {
 <style lang="scss" scoped>
 .markdown {
   width: 100%;
-  min-height: 80vh;
-  .mavonEditor {
-    width: 100%;
-    height: 100%;
-    background: #ffffff;
-  }
-}
-/deep/.markdown-body pre {
-  font-size: 17px;
 }
 </style>

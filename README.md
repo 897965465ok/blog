@@ -29,9 +29,11 @@
 8. "crypto"
 9. "gomail.v2"
 
-待完成
+> 待完成
 - [ ] 找工作
 - [x] 修复图片链接
-- [ ] golang 点赞、阅读、返回一段文字
+- [x] golang 点赞、阅读
+- [x] 修改markdown渲染问题
 - [ ] React Admin
-- [ ] 个人介绍百度图标库
+- [ ] 学习uniapp 
+- [ ] 个人页面
