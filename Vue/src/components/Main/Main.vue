@@ -92,6 +92,11 @@ export default {
   },
 
  async  created() {
+      // let {data} =  await this.$wallhaven({
+      //   q:"girl",
+      //   page:"10"
+      // })
+     
       await this.getPictures(await this.$GetUrl());
       await this.setRecommen({
         tags: (await this.$api.get("v1/tags")).data.result

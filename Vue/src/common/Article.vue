@@ -1,5 +1,5 @@
 <template>
-  <el-row class="card-item" @click.native="readArticler(article.article_path)">
+  <el-row class="card-item" @click.native="readArticler(article.article_path,article.uuid)">
     <el-row class="item-wrapper" :span="24">
       <el-col class="card-left" :span="19">
         <el-row class="title">
@@ -11,7 +11,9 @@
         <el-row class="footer">
           <div class="footer-left">
             <span class="item-tag">{{ article.tag }}</span>
-            <span class="iconfont icon-zan">5</span>
+            <span @click.stop="like(article.uuid,article)" class="iconfont icon-zan"
+              >{{article.like}}</span
+            >
           </div>
           <div class="footer-right">
             <span class="iconfont icon-yuedu">
@@ -50,12 +52,25 @@ export default {
   watch: {
     pictures: (value) => value,
   },
-
+ 
   props: ["article"],
   name: "Articler",
   methods: {
-    readArticler(articlerPath) {
+    async readArticler(articlerPath,uuid) {
+     await   this.$api.get("v1/watchnumber", {
+        params: {
+          uuid
+        },
+      });
       this.$router.push({ path: "markdown", query: { articlerPath } });
+    },
+    async like(uuid,article) {
+    await this.$api.get("/v1/like", {
+        params: {
+          uuid,
+        },
+      });
+      article.like+=1
     },
   },
 };
@@ -116,7 +131,7 @@ export default {
     }
     .card-right {
       height: 100%;
-      
+
       display: flex;
       justify-content: center;
       align-items: center;

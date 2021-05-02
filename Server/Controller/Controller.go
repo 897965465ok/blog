@@ -250,18 +250,45 @@ func QueryFavorites(ctx *gin.Context) {
 func DeleteFavorite(ctx *gin.Context) {
 	DB := common.GetDB()
 	UUID := ctx.Query("uuid")
-	fmt.Println(UUID)
-	result := DB.Where("uuid = ?", UUID).First(&model.Favorites{})
-	DB.Unscoped().Delete(result.Value)
+	result := &model.Favorites{}
+	DB.Where("uuid = ?", UUID).First(result)
+	DB.Unscoped().Delete(result)
 	ctx.JSON(http.StatusOK, gin.H{
 		"code":   200,
 		"result": result,
 	})
 }
 
-// 解析Wallhaven
+func WatchNumber(ctx *gin.Context) {
+	DB := common.GetDB()
+	UUID := ctx.Query("uuid")
+	result := &model.Article{}
+	DB.Where("uuid = ?", UUID).First(result)
+	DB.First(result).Update("WhatchNumber", result.WhatchNumber+1)
+	ctx.JSON(http.StatusOK, gin.H{
+		"code":   200,
+		"result": result,
+	})
+}
+
+// Like
+func Like(ctx *gin.Context) {
+	DB := common.GetDB()
+	UUID := ctx.Query("uuid")
+	result := &model.Article{}
+	DB.AutoMigrate(&model.Article{})
+	DB.Where("uuid = ?", UUID).First(result)
+	DB.First(result).Update("Like", result.Like+1)
+	ctx.JSON(http.StatusOK, gin.H{
+		"code":   200,
+		"result": result,
+	})
+}
+
+// 访问Wallhaven
 func Wallhaven(ctx *gin.Context) {
-	response, err := http.Get("https://wallhaven.cc/api/v1/search")
+	Url := fmt.Sprintf("https://wallhaven.cc/api/v1/search?q=%s&page=%s", ctx.Query("q"), ctx.Query("page"))
+	response, err := http.Get(Url)
 	if err != nil || response.StatusCode != http.StatusOK {
 		ctx.Status(http.StatusServiceUnavailable) // 503
 		return

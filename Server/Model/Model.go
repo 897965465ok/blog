@@ -22,6 +22,7 @@ type Article struct {
 	Tag          string `gorm:"type:varchar(50);"  json:"tag"`
 	ArticlePath  string `gorm:"type:varchar(255);"  json:"article_path" `
 	WhatchNumber int    `gorm:" DEFAULT 0 " json:"whatch_number"`
+	Like         int    `gorm:" DEFAULT 0 " json:"like"`
 }
 
 // 算个用户吧
