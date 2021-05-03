@@ -9,8 +9,8 @@
     </el-col>
     <el-col :offset="12" :span="10">
       <el-menu mode="horizontal">
-        <el-menu-item v-for="item in Menu" :key="item.title">
-          <router-link :to="item.link"> {{ item.title }} </router-link>
+        <el-menu-item v-for="(item,index) in Menu" :key="index">
+            <router-link tag="a" :to="item.link"> {{ item.title }} </router-link>
         </el-menu-item>
       </el-menu>
     </el-col>
@@ -24,14 +24,17 @@ export default {
       {
         title: "首页",
         link: "/",
+ 
       },
       {
         title: "笔记",
         link: "/note",
+   
       },
       {
         title: "登陆",
         link: "/login",
+    
       },
     ],
   }),

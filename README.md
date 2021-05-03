@@ -7,18 +7,18 @@
 
 ## 技术栈 
 
-
-#### 前端
+### 前端
 1. "axios"
 2. "js-cookie"
-3. "mavon-editor"
+3. ~~"mavon-editor"~~
 4. "vue-waterfall2
 5. "vuex-persistedstate"
 6. "vue/2.6.3"
 7. "vue-router"
 8. "vuex"
 9. "element-ui"
-#### 后端
+10. "vue-meditor"
+### 后端
 1. "gin" 
 2. "grom"
 3. "go-jwt"

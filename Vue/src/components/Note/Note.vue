@@ -1,7 +1,11 @@
 <template>
-  <el-row class="main" >
+  <el-row class="main">
     <el-row class="main-content">
-      <el-col class="content-left" :style="{'min-height': leftHight }"  :span="16">
+      <el-col
+        class="content-left"
+        :style="{ 'min-height': leftHight }"
+        :span="16"
+      >
         <el-row>
           <el-menu mode="horizontal">
             <el-menu-item
@@ -15,13 +19,15 @@
           </el-menu>
         </el-row>
         <el-row class="card-wrapper">
-          <Articler
-            v-for="item in temporary"
-            :key="item.uuid"
-            :article="item"
-          ></Articler>
+          <transition-group  name="fade">
+            <Articler
+              v-for="item in temporary"
+              :key="item.uuid"
+              :article="item"
+            ></Articler>
+          </transition-group >
         </el-row>
-         <div style="height:25px;"></div>
+        <div style="height: 25px"></div>
         <el-col class="pagination">
           <el-pagination
             @current-change="change"
@@ -135,6 +141,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.6s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
 .main {
   background: #ffffff;
   .content-left {
