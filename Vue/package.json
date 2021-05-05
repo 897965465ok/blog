@@ -12,7 +12,6 @@
   "dependencies": {
     "axios": "^0.21.0",
     "js-cookie": "^2.2.1",
-    "mavon-editor": "^2.9.1",
     "vue-meditor": "^2.1.1",
     "vue-waterfall2": "^1.10.1",
     "vuex-persistedstate": "^4.0.0-beta.3"

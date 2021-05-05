@@ -20,10 +20,10 @@
   </el-row>
 </template>
 <script>
-import JumpTop from "./Jump/Jump"
+import JumpTop from "./Jump/Jump";
 export default {
-  components:{
-   JumpTop
+  components: {
+    JumpTop,
   },
   data: () => ({
     Menu: [
@@ -46,7 +46,7 @@ export default {
 
 <style lang="scss" scoped>
 .footer {
-    background:#FFFFFF;
+  background: #ffffff;
   a {
     text-decoration: none;
     font-size: 16px;
