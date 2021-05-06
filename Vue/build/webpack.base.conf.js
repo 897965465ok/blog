@@ -18,6 +18,9 @@ module.exports = {
     'vue-router': 'VueRouter',
     'element-ui': 'ELEMENT',
     'vuex':'Vuex',
+    'axios':'axios',
+    'js-cookie':'Cookies'
+
     
   },
   output: {
