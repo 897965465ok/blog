@@ -7,7 +7,8 @@
 
 ## 技术栈 
 
-### 前端
+
+### 博客前端 
 1. "axios"
 2. "js-cookie"
 3. ~~"mavon-editor"~~
@@ -18,6 +19,15 @@
 8. "vuex"
 9. "element-ui"
 10. "vue-meditor"
+### 博客后台 
+1. echarts
+2. antd
+3. http-proxy-middlewar
+4. tailwindcss
+5. axios
+6. react-router-dom
+7. redux-react-hook
+
 ### 后端
 1. "gin" 
 2. "grom"
@@ -31,9 +41,9 @@
 
 > 待完成
 - [ ] 找工作
+- [ ] 学习uniapp 
 - [x] 修复图片链接
 - [x] golang 点赞、阅读
 - [x] 修改markdown渲染问题
-- [ ] React Admin
-- [ ] 学习uniapp 
+- [ ] 博客后台 
 - [ ] 个人页面
