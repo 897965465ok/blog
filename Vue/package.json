@@ -10,7 +10,6 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "vue-meditor": "^2.1.1",
     "vue-waterfall2": "^1.10.1"
   },
   "devDependencies": {
