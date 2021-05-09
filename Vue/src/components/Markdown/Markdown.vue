@@ -1,13 +1,16 @@
 <template>
-  <div id="viewer"></div>
+  <div>
+    <div class="viewer"></div>
+    <Comment></Comment>
+  </div>
 </template>
-
 <script>
-// import hljs from "highlight.js";
-// import "highlight.js/styles/tomorrow.css";
-
+import Comment from "./Comment";
 export default {
   name: "About",
+  components: {
+    Comment,
+  },
   async mounted() {
     let articlerPath = this.$route.query.articlerPath.replace(
       "http://localhost:3800",
@@ -16,11 +19,10 @@ export default {
     let { data } = await this.$api.get("/v1" + articlerPath);
     const Viewer = toastui.Editor;
     const viewer = new Viewer({
-      el: document.querySelector("#viewer"),
-      height: "100%",
-      initialValue: data,
+      el: document.querySelector(".viewer"),
+      height: "1200px",
     });
-    viewer.setMarkdown(data)
+    viewer.setMarkdown(data);
     // viewer.invoke("setMarkdown", data);
     document.querySelectorAll("pre code").forEach((block) => {
       hljs.highlightBlock(block);
@@ -29,9 +31,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-/deep/#viewer {
+/deep/.viewer {
   .tui-editor-contents {
-    font-size: 14px;
+    font-size: 18px;
     background: #ffffff;
     h1,
     h2,
@@ -39,7 +41,7 @@ export default {
     h4,
     h5,
     h6 {
-      //  background: #F7F4F4;
+      padding: 10px;
       border-bottom: none;
     }
     pre {

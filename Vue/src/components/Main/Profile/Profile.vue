@@ -7,12 +7,11 @@
       <img class="el-image" src="../../../assets/jerry.png" />
     </el-row>
     <el-row class="tag">
-      <ul>
+      <ul style="padding:0px;">
         <li v-for="(item, index) in icon" :key="index">
           <a :href="item.link">
             <i class="iconfont" :class="item.icon"></i>
             <p >{{ item.title }}</p>
-    
           </a>
         </li>
       </ul>

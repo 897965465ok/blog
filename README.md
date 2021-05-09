@@ -18,15 +18,19 @@
 7. "vue-router"
 8. "vuex"
 9. "element-ui"
-10. "vue-meditor"
+10. ~~"vue-meditor"~~
+11. toastui-editor
+12. highlight
+13. emoji-js
 ### 博客后台 
-1. echarts
-2. antd
-3. http-proxy-middlewar
-4. tailwindcss
-5. axios
-6. react-router-dom
-7. redux-react-hook
+1. react
+2. echarts
+3. antd
+4. http-proxy-middlewar
+5. tailwindcss
+6. axios
+7. react-router-dom
+8. redux-react-hook
 
 ### 后端
 1. "gin" 
@@ -47,3 +51,4 @@
 - [x] 修改markdown渲染问题
 - [ ] 博客后台 
 - [ ] 个人页面
+- [ ] 评论
