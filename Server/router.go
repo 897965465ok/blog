@@ -21,6 +21,7 @@ func CollectRouter(r *gin.Engine) *gin.Engine {
 	r.Static("/v1/markdown", "./markdown")
 	r.LoadHTMLFiles("./view/index.tmpl")
 	r.GET("/", controller.Index)
+	r.GET("/ws", controller.WsCnection)
 	r.NoRoute(controller.Index)
 	V1 := r.Group("v1")
 	{

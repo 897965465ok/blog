@@ -42,6 +42,11 @@ const router = new Router({
           name: 'Markdown',
           component: Markdown
         },
+        {
+          path: '/chat',
+          name: 'Chat',
+          component: () => import('@/components/Chat/Chat')
+        },
       ]
     },
   ]

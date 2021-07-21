@@ -7,7 +7,6 @@ import {
   Table,
   Input,
   Form,
-  Row,
   Space
 } from "antd";
 
@@ -158,6 +157,7 @@ const EditableTable = () => {
     </td>
 
   }
+
   // 设置单元格
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
@@ -183,9 +183,13 @@ const EditableTable = () => {
             cell: Cell
           }
         }}
+
         dataSource={data}
+
         columns={mergedColumns}
+
         rowClassName="editable-row"
+        
         pagination={{
           onChange: cancel
         }}

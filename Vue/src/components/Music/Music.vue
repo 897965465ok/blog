@@ -1,6 +1,6 @@
 <template>
   <div class="music">
-    <iframe
+    <!-- <iframe
       frameborder="no"
       border="0"
       marginwidth="0"
@@ -9,7 +9,7 @@
       height="450"
       src="//music.163.com/outchain/player?type=0&id=6744975757&auto=0&height=430"
     >
-    </iframe>
+    </iframe> -->
   </div>
 </template>
 <style lang="scss" scoped>

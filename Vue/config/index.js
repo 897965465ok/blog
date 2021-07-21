@@ -19,6 +19,7 @@ module.exports = {
           '^/v1': "/v1"                  //如果地址不想带api就这样替换掉
         }
       },
+   
       // 'https://pixabay.com/api': {
       //   target: 'https://pixabay.com/api',  //目标接口域名
       //   changeOrigin: true,  //是否跨域
@@ -34,7 +35,15 @@ module.exports = {
         pathRewrite: {
           '^/wallhaven': ""                  //如果地址不想带api就这样替换掉
         }
-      }
+      },
+      '/ws': {
+        target: 'ws://localhost:3800/ws',  //目标接口域名
+        changeOrigin: true,//是否允许跨域
+        pathRewrite: {
+          '^/ws': ""                  //如果地址不想带api就这样替换掉
+        },
+        ws:true,
+      },
     },
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
