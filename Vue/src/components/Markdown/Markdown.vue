@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="viewer"></div>
-    <!-- <Comment></Comment> -->
+    <Comment></Comment>
   </div>
 </template>
 <script>
@@ -9,7 +9,7 @@
 export default {
   name: "About",
   components: {
-    // Comment:()=>import("./Comment")
+    Comment:()=>import("./Comment")
   },
   async mounted() {
     let articlerPath = this.$route.query.articlerPath.replace(

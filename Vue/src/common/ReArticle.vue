@@ -21,8 +21,8 @@ export default {
   methods: {
     readArticler(articlerPath, uuid) {
       this.$router.push({ path: "markdown", query: { articlerPath, uuid } });
-    },
-  },
+    }
+  }
 };
 </script>
 

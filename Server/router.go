@@ -72,6 +72,7 @@ func CollectRouter(r *gin.Engine) *gin.Engine {
 		V1.GET("/cookies", controller.Cookies)
 		V1.GET("/openid", controller.Cookies)
 		V1.GET("/comment", controller.GetComment)
+		V1.POST("/wallhaven2", controller.Wallhaven_V2)
 
 	}
 	return r

@@ -46,7 +46,7 @@ const router = new Router({
           path: '/chat',
           name: 'Chat',
           component: () => import('@/components/Chat/Chat')
-        },
+        }
       ]
     },
   ]
