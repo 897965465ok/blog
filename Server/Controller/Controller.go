@@ -11,12 +11,13 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
-	"strings"
+	"sync"
 
 	"github.com/buger/jsonparser"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"github.com/mitchellh/mapstructure"
+	"github.com/panjf2000/ants/v2"
 	uuid "github.com/satori/go.uuid"
 	"github.com/smartwalle/alipay/v3"
 	"github.com/spf13/viper"
@@ -115,10 +116,11 @@ func CreateTag(ctx *gin.Context) {
 
 func QueryAllTag(ctx *gin.Context) {
 	DB := common.GetDB()
-	result := DB.Find(&[]model.Tags{})
+	result := &[]model.Tags{}
+	DB.Find(result)
 	ctx.JSON(http.StatusOK, gin.H{
 		"code":   200,
-		"result": result.Value,
+		"result": result,
 	})
 }
 
@@ -127,10 +129,10 @@ func CreateArticle(ctx *gin.Context) {
 	DB := common.GetDB()
 	DB.AutoMigrate(&model.Article{})
 	Article := &model.Article{Tag: ctx.Query("tag")}
-	result := DB.Create(Article)
+	DB.Create(Article)
 	ctx.JSON(http.StatusOK, gin.H{
 		"code":   200,
-		"result": result,
+		"result": Article,
 	})
 }
 
@@ -138,10 +140,11 @@ func CreateArticle(ctx *gin.Context) {
 
 func QueryAllArticle(ctx *gin.Context) {
 	DB := common.GetDB()
-	result := DB.Find(&[]model.Article{})
+	result := &[]model.Article{}
+	DB.Find(result)
 	ctx.JSON(http.StatusOK, gin.H{
 		"code":   200,
-		"result": result.Value,
+		"result": result,
 	})
 }
 
@@ -150,7 +153,8 @@ func QueryAllArticle(ctx *gin.Context) {
 func QueryOneArticle(ctx *gin.Context) {
 	DB := common.GetDB()
 	UUID := ctx.Query("uuid")
-	result := DB.Where("uuid = ?", UUID).First(&model.Article{})
+	result := &model.Article{}
+	DB.Where("uuid = ?", UUID).First(result)
 	ctx.JSON(http.StatusOK, gin.H{
 		"code":   200,
 		"result": result,
@@ -162,8 +166,9 @@ func QueryOneArticle(ctx *gin.Context) {
 func DeleteArticle(ctx *gin.Context) {
 	DB := common.GetDB()
 	UUID := ctx.Query("uuid")
-	result := DB.Where("uuid = ?", UUID).First(&model.Article{})
-	DB.Unscoped().Delete(result.Value)
+	result := &model.Article{}
+	DB.Where("uuid = ?", UUID).First(result)
+	DB.Unscoped().Delete(result)
 	ctx.JSON(http.StatusOK, gin.H{
 		"code":   200,
 		"result": result,
@@ -234,20 +239,21 @@ func ADDFavorite(ctx *gin.Context) {
 		Name: ctx.Query("name"),
 		Link: ctx.Query("link"),
 	}
-	result := DB.Create(Favorites)
+	DB.Create(Favorites)
 	ctx.JSON(http.StatusOK, gin.H{
 		"code":   200,
-		"result": result,
+		"result": Favorites,
 	})
 }
 
 // 查询全部收藏
 func QueryFavorites(ctx *gin.Context) {
 	DB := common.GetDB()
-	result := DB.Find(&[]model.Favorites{})
+	result := &[]model.Favorites{}
+	DB.Find(result)
 	ctx.JSON(http.StatusOK, gin.H{
 		"code":   200,
-		"result": result.Value,
+		"result": result,
 	})
 }
 
@@ -519,138 +525,92 @@ func WsCnection(ctx *gin.Context) {
 
 // 访问Wallhaven
 func Wallhaven(ctx *gin.Context) {
-	//创建任务列表
-	ports := make(chan int, 9)
-	// 任务结果
-	results := make(chan string, cap(ports))
-
-	for i := 0; i < cap(ports); i++ {
-		// 开启线程
-		go func(ports chan int, result chan string) {
-			for page := range ports {
-				Url := fmt.Sprintf("https://wallhaven.cc/api/v1/search?q=%s&page=%d", ctx.Query("q"), (page + 1))
-
-				response, err := http.Get(Url)
-
-				if err != nil || response.StatusCode != http.StatusOK {
-					ctx.Status(http.StatusServiceUnavailable) // 503
-					results <- strconv.Itoa(http.StatusServiceUnavailable)
-					return
-				}
-
-				defer response.Body.Close()
-
-				str, _ := ioutil.ReadAll(response.Body)
-
-				value, _, _, _ := jsonparser.Get(str)
-
-				data, err := jsonparser.GetUnsafeString(value, "data")
-
-				if err != nil {
-					fmt.Println("获取data失败")
-				}
-				results <- data
-
-			}
-		}(ports, results)
-	}
-	page, err := strconv.Atoi(ctx.Query("page"))
-	if err != nil {
-		page = 0
-	}
-	go func() {
-		// 派发任务
-		for i := 0; i < 9; i++ {
-			ports <- page + i
-		}
-		close(ports)
-	}()
-	array := make([]string, 0)
-	for i := 0; i < cap(results); i++ {
-		data, ok := <-results
-		if ok == false {
-			close(results)
-			break
-		}
-		array = append(array, data)
-	}
-
-	fileName := "test.js"
-	dstFile, err := os.OpenFile(fileName, os.O_RDWR|os.O_APPEND|os.O_CREATE, os.ModePerm)
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	defer dstFile.Close()
-	dstFile.WriteString("export default")
-	dstFile.WriteString(strings.Join(array, "\n"))
-	ctx.JSON(http.StatusOK, gin.H{
-		"code":   200,
-		"result": array,
-	})
-
-}
-
-func Wallhaven_V2(ctx *gin.Context) {
 	DB := common.GetDB()
-	DB.AutoMigrate(&model.ImgUrl{})
-	defer DB.Close()
-	Url := fmt.Sprintf("https://wallhaven.cc/api/v1/search?q=%s&page=%d", ctx.Query("q"), 2)
-	response, err := http.Get(Url)
-	if err != nil || response.StatusCode != http.StatusOK {
-		ctx.Status(http.StatusServiceUnavailable) // 503
-		// results <- strconv.Itoa(http.StatusServiceUnavailable)
-		return
-	}
-	defer response.Body.Close()
-	str, _ := ioutil.ReadAll(response.Body)
-	jsonparser.ArrayEach(str, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
-		Img := &model.ImgUrl{}
-		jsonparser.ObjectEach(value, func(key, value []byte, dataType jsonparser.ValueType, offset int) error {
-			Strkey := string(key)
-			StrValue := string(value)
-			switch Strkey {
-			case "url":
-				Img.Url = StrValue
-			case "short_url":
-				Img.Short_url = StrValue
-			case "category":
-				Img.Category = StrValue
-			case "dimension_x":
-				v, _ := strconv.Atoi(StrValue)
-				Img.Dimension_x = int64(v)
-			case "dimension_y":
-				v, _ := strconv.Atoi(StrValue)
-				Img.Dimension_y = int64(v)
-			case "file_size":
-				v, _ := strconv.Atoi(StrValue)
-				Img.File_size = int64(v)
-			case "file_type":
-				Img.File_type = StrValue
-			case "path":
-				Img.Path = StrValue
-			case "thumbs":
-				jsonparser.ObjectEach(value, func(key, value []byte, dataType jsonparser.ValueType, offset int) error {
-					switch string(key) {
-					case "large":
-						Img.Large = string(value)
-					case "original":
-						Img.Original = string(value)
-					case "small":
-						Img.Small = string(value)
-					}
-					return nil
-				})
-			}
-			return nil
-		})
-		DB.Create(Img)
-	}, "data")
+	Img := &[]model.ImgUrl{}
+	err := DB.Limit(216).Offset(1).Select([]string{"small", "original", "large", "uuid", "id"}).Find(Img).Error
 	if err != nil {
-		fmt.Println("获取data失败", err)
+		ctx.JSON(http.StatusOK, gin.H{
+			"code":   http.StatusNotFound,
+			"result": err,
+		})
 	}
 	ctx.JSON(http.StatusOK, gin.H{
-		"code": 200,
-		// "result": Img,
+		"code":   http.StatusOK,
+		"result": Img,
+	})
+}
+func Wallhaven_V2(ctx *gin.Context) {
+	var wg sync.WaitGroup
+	// defer ants.Release()
+	pool, _ := ants.NewPoolWithFunc(10, func(i interface{}) {
+		wg.Done()
+		DB := common.GetDB()
+		i, _ = i.(int64)
+		Url := fmt.Sprintf("https://wallhaven.cc/api/v1/search?q=%s&page=%d", "anime", i)
+		response, err := http.Get(Url)
+		if err != nil || response.StatusCode != http.StatusOK {
+			ctx.Status(http.StatusServiceUnavailable) // 503
+			return
+		}
+		defer response.Body.Close()
+		str, _ := ioutil.ReadAll(response.Body)
+		jsonparser.ArrayEach(str, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
+			Img := &model.ImgUrl{}
+			DB.AutoMigrate(Img)
+			jsonparser.ObjectEach(value, func(key, value []byte, dataType jsonparser.ValueType, offset int) error {
+				Strkey := string(key)
+				StrValue := string(value)
+				switch Strkey {
+				case "url":
+					Img.Url = StrValue
+				case "short_url":
+					Img.Short_url = StrValue
+				case "category":
+					Img.Category = StrValue
+				case "dimension_x":
+					v, _ := strconv.Atoi(StrValue)
+					Img.Dimension_x = int64(v)
+				case "dimension_y":
+					v, _ := strconv.Atoi(StrValue)
+					Img.Dimension_y = int64(v)
+				case "file_size":
+					v, _ := strconv.Atoi(StrValue)
+					Img.File_size = int64(v)
+				case "file_type":
+					Img.File_type = StrValue
+				case "path":
+					Img.Path = StrValue
+				case "thumbs":
+					jsonparser.ObjectEach(value, func(key, value []byte, dataType jsonparser.ValueType, offset int) error {
+						switch string(key) {
+						case "large":
+							Img.Large = string(value)
+						case "original":
+							Img.Original = string(value)
+						case "small":
+							Img.Small = string(value)
+						}
+						return nil
+					})
+				}
+				return nil
+			})
+			DB.Create(Img)
+		}, "data")
+		if err != nil {
+			fmt.Println("获取data失败", err)
+		}
+	})
+	defer pool.Release()
+	// 逐个提交任务。
+	taskNumber := util.GenerateRangeNum(1, 200, 10)
+	for _, item := range taskNumber {
+		wg.Add(1)
+		_ = pool.Invoke(int64(item))
+	}
+	wg.Wait()
+	ctx.JSON(http.StatusOK, gin.H{
+		"code":      200,
+		"img_index": taskNumber,
 	})
 }

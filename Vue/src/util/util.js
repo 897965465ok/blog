@@ -52,40 +52,23 @@ export default {
         }
 
         Vue.prototype.$wallhaven = async (params) => {
-            let arr = []
             try {
                 let { data } = await Vue.prototype.$api.get('v1/wallhaven', {
                     params: {
                         q: params.q,
-                        page: Math.floor(Math.random() * (200 - 1)) + 1
                     }
                 })
-                for (const iterator of data.result) {
-                    arr = arr.concat(JSON.parse(iterator))
-                }
-        
-             arr =  arr.map(item => {
-                    return {
-                        ...item.thumbs,
-                        id: item.id
-                    }
-                })
-                let obj = {};
-                return  arr.reduce((cur, next) => {
-                    obj[next.id] ? "" : obj[next.id] = true && cur.push(next);
-                    return cur;
-                }, []) //设置cur默认类型为数组，并且初始值为空的数组
-              
+                return data.result
             } catch (e) {
                 return false
             }
         }
 
-        Vue.prototype.$random = (min, max) =>{
- 
+        Vue.prototype.$random = (min, max) => {
+
             return Math.floor(Math.random() * (max - min)) + min;
-           
-          }
+
+        }
         Vue.prototype.$GetUrl = async () => {
             try {
                 return (await axios.get('https://pixabay.com/api', {

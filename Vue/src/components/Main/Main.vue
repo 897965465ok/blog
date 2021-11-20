@@ -99,7 +99,6 @@ export default {
     // await this.getPictures(await this.$GetUrl());
     console.log(this.$store.state.pictures.length )
     if (this.$store.state.pictures.length <=1) {
-      console.log("发送")
       await this.wallhaven(await this.$wallhaven({ q: "anime" }));
     }
     await this.setRecommen({

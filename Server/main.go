@@ -1,7 +1,6 @@
 package main
 
 import (
-	common "main/Common"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -11,10 +10,8 @@ import (
 
 func main() {
 	InitConfig()
-	common.CreateData()
 	r := gin.Default()
 	r = CollectRouter(r)
-	defer common.DB.Close()
 	r.Run(viper.GetString("server.host"))
 }
 
