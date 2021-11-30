@@ -9,6 +9,7 @@ import store from './store/store'
 import waterfall from 'vue-waterfall2'
 import './common'
 import util from './util/util'
+// import "tailwindcss/tailwind.css"
 Vue.use(ElementUI);
 Vue.use(waterfall)
 Vue.use(util)

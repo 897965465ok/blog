@@ -70,6 +70,8 @@ func ParseToken(tokenString string) (*jwt.Token, *Claims, error) {
 
 func HasUserName(userName string) bool {
 	DB := common.GetDB()
+	sqlDB, _ := DB.DB()
+	defer sqlDB.Close()
 	user := &model.User{}
 	// 如果没有记录就等于0
 	if DB.Where("name = ?", userName).First(user).RowsAffected == 0 {
@@ -111,6 +113,8 @@ func VerifyEmailFormat(email string) bool {
 func HasUserEmail(email string) bool {
 	verify := VerifyEmailFormat(email)
 	DB := common.GetDB()
+	sqlDB, _ := DB.DB()
+	defer sqlDB.Close()
 	user := &model.User{}
 	// 如果没有记录就等于0
 	if verify && (DB.Where("email = ?", email).First(user).RowsAffected == 0) {
@@ -171,6 +175,8 @@ func Fail(ctx *gin.Context, data gin.H, message string) {
 //读取文件列表
 func ReadFile(dirPath, dirName string) {
 	DB := common.GetDB()
+	sqlDB, _ := DB.DB()
+	defer sqlDB.Close()
 	DB.AutoMigrate(&model.Article{})
 	dirArr, err := ioutil.ReadDir(dirPath)
 	ErrorHandling(err)
@@ -200,6 +206,8 @@ func ReadFile(dirPath, dirName string) {
 // 读取文件夹列表
 func ReadDir(dirPath string) {
 	DB := common.GetDB()
+	sqlDB, _ := DB.DB()
+	defer sqlDB.Close()
 	DB.AutoMigrate(&model.Tags{})
 	dirArr, err := ioutil.ReadDir(dirPath)
 	ErrorHandling(err)

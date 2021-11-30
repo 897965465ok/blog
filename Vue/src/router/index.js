@@ -1,41 +1,41 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import  Markdown from '@/components/Markdown/Markdown.vue'
+import  Markdown from '@/Pages/Markdown/Markdown.vue'
 Vue.use(Router)
 const router = new Router({
   routes: [
     {
       path: '/',
       name: 'Home',
-      component: () => import('@/layout/Home/Home'),
+      component: () => import('@/Pages/Home/Home'),
       children: [
         {
           path: '/',
           name: 'main',
-          component: () => import('@/components/Main/Main')
+          component: () => import('@/Pages/Main/Main')
         },
         {
           path: '/note',
           name: 'note',
-          component: () => import('@/components/Note/Note')
+          component: () => import('@/Pages/Note/Note')
         },
         {
           path: '/gossip',
           name: 'gossip',
-          component: () => import('@/components/Gossip/Gossip')
+          component: () => import('@/Pages/Gossip/Gossip')
 
         },
         {
           path: '/login',
           name: 'login',
           meta: { requiresAuth: true },
-          component: () => import('@/components/Login/Login')
+          component: () => import('@/Pages/Login/Login')
         },
 
         {
           path: '/about',
           name: 'about',
-          component: () => import('@/components/About/About')
+          component: () => import('@/Pages/About/About')
         },
         {
           path: '/markdown',
@@ -45,7 +45,7 @@ const router = new Router({
         {
           path: '/chat',
           name: 'Chat',
-          component: () => import('@/components/Chat/Chat')
+          component: () => import('@/Pages/Chat/Chat')
         }
       ]
     },
@@ -69,6 +69,5 @@ const router = new Router({
 //     }
 //   }
 // })
-
 
 export default router

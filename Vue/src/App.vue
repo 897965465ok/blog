@@ -3,16 +3,18 @@
     <transition name="fade">
       <router-view :key="$route.path" />
     </transition>
-    <Music></Music>
+    <!-- <Music></Music> -->
+    <!-- src/components/HelloWorld.vue -->    
+<h1 class="font-semibold text-4xl text-purple-700">你好</h1>
   </div>
 </template>
 <script>
-import Music from "./components/Music/Music";
+import Music from "./Pages/Music/Music";
 export default {
   components: {
     Music
   },
-  name: "App",
+  name: "App"
 };
 </script>
 <style lang="scss">
@@ -28,7 +30,8 @@ export default {
 //   padding: 0px;
 //   font-family: "Microsoft Yahei";
 // }
-body {
+body ,html {
+  height: 100%;
   background-color: #f7f4f4;
 }
 </style>
