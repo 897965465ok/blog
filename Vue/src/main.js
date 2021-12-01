@@ -9,12 +9,12 @@ import store from './store/store'
 import waterfall from 'vue-waterfall2'
 import './common'
 import util from './util/util'
-// import "tailwindcss/tailwind.css"
 Vue.use(ElementUI);
 Vue.use(waterfall)
 Vue.use(util)
 Vue.config.productionTip = false
 Vue.prototype.$api = api
+import "tailwindcss/tailwind.css"
 new Vue({
   el: '#app',
   router,
