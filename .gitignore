@@ -2,6 +2,7 @@
 Vue/node_modules/
 Vue/dist/
 Admin/node_modules
+Server/tmp
 Server/Config
 npm-debug.log*
 yarn-debug.log*

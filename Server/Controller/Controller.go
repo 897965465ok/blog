@@ -12,7 +12,6 @@ import (
 	"path/filepath"
 	"strconv"
 	"sync"
-	"time"
 
 	"github.com/buger/jsonparser"
 	"github.com/gin-gonic/gin"
@@ -432,19 +431,20 @@ func Comment(ctx *gin.Context) {
 
 // 获取评论
 func GetComment(ctx *gin.Context) {
-	t := time.Now()
-
 	DB := common.GetDB()
 	sqlDB, _ := DB.DB()
 	defer sqlDB.Close()
 	article := model.Article{
 		UUID: ctx.Query("articleId"),
 	}
-	if DB.Select("id").First(&article, "uuid").Error == nil &&
+	if DB.Select("id").
+		Where("uuid=?", article.UUID).
+		First(&article).Error == nil &&
 		DB.Model(&article).
-			Preload("Comment.User", func(DB *gorm.DB) *gorm.DB {
-				return DB.Select("ID", "name")
-			}).
+			Preload("Comment.User",
+				func(DB *gorm.DB) *gorm.DB {
+					return DB.Select("ID", "name")
+				}).
 			Preload("Comment").
 			First(&article).Error == nil {
 		ctx.JSON(http.StatusOK, gin.H{
@@ -459,8 +459,6 @@ func GetComment(ctx *gin.Context) {
 			"message": "失败",
 		})
 	}
-	elapsed := time.Since(t)
-	fmt.Println("app run time", elapsed)
 }
 
 var upGrader = websocket.Upgrader{

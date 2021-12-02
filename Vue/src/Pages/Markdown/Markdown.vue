@@ -5,11 +5,11 @@
   </div>
 </template>
 <script>
-
+import Comment from "./Comment";
 export default {
   name: "About",
   components: {
-    Comment:()=>import("./Comment")
+    Comment
   },
   async mounted() {
     let articlerPath = this.$route.query.articlerPath.replace(
@@ -17,38 +17,37 @@ export default {
       ""
     );
     let { data } = await this.$api.get("/v1" + articlerPath);
-    const Viewer = toastui.Editor;
-    const viewer = new Viewer({
+    const { Editor } = toastui;
+    const { codeSyntaxHighlight } = Editor.plugin;
+    const viewer = Editor.factory({
       el: document.querySelector(".viewer"),
-      height: "1200px",
+      viewer: true,
+      height: "100%",
+      plugins: [[codeSyntaxHighlight, { highlighter: Prism }]]
     });
     viewer.setMarkdown(data);
     // viewer.invoke("setMarkdown", data);
-    document.querySelectorAll("pre code").forEach((block) => {
-      hljs.highlightBlock(block);
-    });
-  },
+  }
 };
 </script>
 <style lang="scss" scoped>
-/deep/.viewer {
-  .tui-editor-contents {
-    font-size: 18px;
-    background: #ffffff;
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      padding: 10px;
-      border-bottom: none;
-    }
-    pre {
-      margin: 0px;
-      padding: 12px;
-      background-color: transparent;
-    }
+/deep/ .toastui-editor-contents {
+  font-size: 18px;
+  background: #ffffff;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    padding: 10px;
+    border-bottom: none;
   }
+  pre {
+    margin: 0px;
+    padding: 12px;
+    background-color: transparent;
+  }
+  @apply bg-gray-50;
 }
 </style>

@@ -6,11 +6,9 @@ import router from './router'
 import ElementUI from 'element-ui';
 import { api } from './api'
 import store from './store/store'
-import waterfall from 'vue-waterfall2'
-import './common'
+import './components'
 import util from './util/util'
 Vue.use(ElementUI);
-Vue.use(waterfall)
 Vue.use(util)
 Vue.config.productionTip = false
 Vue.prototype.$api = api

@@ -29,7 +29,7 @@
   </el-row>
 </template>
 <script>
-const EmojiConvertor = require("emoji-js");
+
 const emoji = new EmojiConvertor();
 emoji.replace_mode = "unified";
 import emojiArr from "./array";
