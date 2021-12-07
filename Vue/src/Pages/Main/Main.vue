@@ -97,7 +97,7 @@ export default {
 
   async created() {
     // await this.getPictures(await this.$GetUrl());
-    console.log(this.$store.state.pictures.length )
+    // console.log(this.$store.state.pictures.length )
     if (this.$store.state.pictures.length <=1) {
       await this.wallhaven(await this.$wallhaven({ q: "anime" }));
     }

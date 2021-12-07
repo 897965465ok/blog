@@ -1,15 +1,24 @@
 <template>
   <div>
     <div class="viewer"></div>
-    <Comment></Comment>
+    <!-- <InputBox></InputBox>
+    <Comment :comments="comments"></Comment> -->
   </div>
 </template>
 <script>
-import Comment from "./Comment";
+import Comment from "./Comment.vue";
+import InputBox from "./InputBox.vue";
 export default {
   name: "About",
+  props: {
+    comments: {
+      type: Array,
+      default: []
+    }
+  },
   components: {
-    Comment
+    Comment,
+    InputBox
   },
   async mounted() {
     let articlerPath = this.$route.query.articlerPath.replace(
@@ -27,6 +36,13 @@ export default {
     });
     viewer.setMarkdown(data);
     // viewer.invoke("setMarkdown", data);
+    // 请求评论 // 先不写
+    // let articleId = this.$route.query.uuid;
+    // let { data: comment } = await this.$getComments(articleId);
+    // if (comment.code == 200) {
+    //   console.log(comment);
+    //   this.comments = comment.result;
+    // }
   }
 };
 </script>

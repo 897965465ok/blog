@@ -155,6 +155,7 @@ func QueryAllArticle(ctx *gin.Context) {
 	DB := common.GetDB()
 	sqlDB, _ := DB.DB()
 	defer sqlDB.Close()
+	DB.AutoMigrate(&model.Article{})
 	result := &[]model.Article{}
 	DB.Find(result)
 	ctx.JSON(http.StatusOK, gin.H{
@@ -387,19 +388,25 @@ func Openid(ctx *gin.Context) {
 
 }
 
+func TestShould(ctx *gin.Context) {
+	util.Success(ctx, gin.H{
+		"code":   http.StatusOK,
+		"result": "测试函数"}, "成功")
+
+}
+
 // 评论 文章
 func Comment(ctx *gin.Context) {
 	DB := common.GetDB()
 	sqlDB, _ := DB.DB()
-	// 创建数据库
-	DB.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(&model.User{}, &model.Comment{}, &model.Article{})
+	DB.Set("gorm:table_options", "ENGINE=InnoDB").
+		AutoMigrate(&model.User{}, &model.Comment{}, &model.Article{})
 	defer sqlDB.Close()
-	article := model.Article{
-		UUID: ctx.PostForm("articleId"),
-	}
-	comment := model.Comment{
-		Content: ctx.PostForm("content"),
-	}
+	// 判断是否回复文章
+	replyArticle := ctx.PostForm("replyArticle")
+	boolean, _ := strconv.ParseBool(replyArticle)
+	uuid := ctx.PostForm("articleId")
+	content := ctx.PostForm("content")
 
 	user := model.User{}
 	// inerface 转结构体
@@ -408,23 +415,46 @@ func Comment(ctx *gin.Context) {
 	if exists {
 		mapstructure.Decode(interUser, user)
 	}
-	if DB.First(&user).Error == nil && DB.Where("uuid = ?", article.UUID).First(&article).Error == nil {
-		// 保存回复谁的ID
-		comment.Reply_Id = article.ID
-		// 文章还是回复评论
-		comment.ISReply = false
-		comment.User = []*model.User{&user}
-		article.Comment = []*model.Comment{&comment}
-		// 创造模型
-		DB.Save(&article)
-		util.Success(ctx, gin.H{
-			"code":   http.StatusOK,
-			"result": article}, "成功")
-	} else {
-		util.Fail(ctx, gin.H{
-			"code":   http.StatusBadRequest,
-			"result": "error",
-		}, "服务器抽风了~~")
+	if DB.Select("id").First(&user).Error == nil {
+		if boolean { // 回复用户
+			// var model, comment, CommentSlice = model.Comment{}, model.Comment{}, []*model.Comment{}
+			// // 查出id
+			// DB.Select("id").Where("uuid = ?", uuid).First(&model)
+			// DB.Model(&user).Association("Comment").Append(&comment)
+			// comment.Content = content
+			// comment.ISReply = boolean
+			// comment.To = "Jiang"
+			// comment.Reply_Id = user.ID
+			// CommentSlice = append(CommentSlice, &comment)
+			// DB.Model(&model).Association("Replys").Append(CommentSlice)
+			// ctx.JSON(http.StatusOK, gin.H{
+			// 	"code":   200,
+			// 	"result": "评论成功",
+			// })
+
+		} else {
+			// 回复文章
+			article := model.Article{UUID: uuid}
+			comment := model.Comment{Content: content}
+			if DB.Select("id").Where("uuid = ?", article.UUID).First(&article).Error == nil {
+				comment.Reply_Id = article.ID
+				comment.ISReply = boolean
+				DB.Model(&user).Association("Comment").Append(&comment)
+				DB.Model(&article).Association("Comment").Append(&comment)
+				ctx.JSON(http.StatusOK, gin.H{
+					"code":   http.StatusOK,
+					"result": "成功",
+				})
+
+			} else {
+				ctx.JSON(http.StatusOK, gin.H{
+					"code":   http.StatusBadRequest,
+					"result": "失败",
+				})
+			}
+
+		}
+
 	}
 
 }
@@ -434,24 +464,24 @@ func GetComment(ctx *gin.Context) {
 	DB := common.GetDB()
 	sqlDB, _ := DB.DB()
 	defer sqlDB.Close()
-	article := model.Article{
-		UUID: ctx.Query("articleId"),
-	}
-	if DB.Select("id").
-		Where("uuid=?", article.UUID).
-		First(&article).Error == nil &&
+	article := model.Article{UUID: ctx.Query("articleId")}
+	if DB.Select("id").Where("uuid=?", article.UUID).First(&article).Error == nil &&
 		DB.Model(&article).
+			// Preload("Comment.Replys").
 			Preload("Comment.User",
 				func(DB *gorm.DB) *gorm.DB {
-					return DB.Select("ID", "name")
+					// 屏蔽密码
+					return DB.Select("name", "uuid", "id", "email")
 				}).
 			Preload("Comment").
 			First(&article).Error == nil {
+		// 找出user并整合
 		ctx.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusOK,
 			"result":  article.Comment,
 			"message": "成功",
 		})
+
 	} else {
 		ctx.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusBadRequest,

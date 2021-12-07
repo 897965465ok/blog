@@ -1,114 +1,60 @@
 <template>
-  <el-row>
-    <el-row class="comment-wrapper">
-      <el-col class="textarea-container">
-        <el-input
-          placeholder="发一条友善的评论"
-          type="textarea"
-          resize="none"
-          v-model="textarea"
-          ref="textarea"
-        >
-        </el-input>
-        <el-popover placement="top-start" trigger="click">
-          <div
-            @click="checkout($event)"
-            :style="enojiStyle"
-            v-html="emojiChars"
-          ></div>
-          <el-button type="primary" style="font-size: 30px" slot="reference"
-            >😁</el-button
+  <div class="container   h-auto w-full  px-4    shadow    bg-white ">
+    <div
+      class=" flex flex-col    shadow-inner  my-4  "
+      v-for="(item, index) in comments"
+      :key="item.uuid"
+    >
+      <div class="flex  h-24  justify-start text-left my-4 py-3  ">
+        <div class=" h-full flex justify-center  content-center">
+          <img class="block h-full " src="@/assets/jerry.png" />
+        </div>
+        <div class=" flex mx-3  flex-grow  justify-between  flex-col  ">
+          <span class="text-gray-500  text-xl  font-serif ">{{
+            item.User.name
+          }}</span>
+          <p class=" text-gray-600  text-2xl">
+            {{ item.Content }}
+          </p>
+        </div>
+        <div class="flex  flex-col h-full   cursor-pointer  justify-end ">
+          <!-- <p
+            @click.stop="openInput(item)"
+            class=" text-gray-500 hover:text-purple-500 "
           >
-        </el-popover>
-        <el-button type="primary" @click="change" class="comment-submit"
-          >发表评论</el-button
-        >
-      </el-col>
-    </el-row>
-    <Replay></Replay>
-  </el-row>
+            回复
+          </p> -->
+        </div>
+      </div>
+      <!-- <Comment :comments="item.Replys"></Comment> -->
+      <!-- <InputBox :reply="item" v-if="item.uuid == InputBoxID"></InputBox> -->
+    </div>
+  </div>
 </template>
 <script>
-
-const emoji = new EmojiConvertor();
-emoji.replace_mode = "unified";
-import emojiArr from "./array";
-import Replay from "./Reply";
+import InputBox from "./InputBox.vue";
 export default {
-  components: {
-    Replay
+  name: "Comment",
+  components: { InputBox },
+  props: {
+    comments: {
+      type: Array,
+      default: []
+    }
   },
   data() {
     return {
-      textarea: "",
-      Showemoji: false,
-      emojiChars: "",
-      enojiStyle: {
-        fontSize: "20px",
-        width: "280px",
-        cursor: "pointer"
-      }
+      InputBoxID: "",
+      comments: []
     };
   },
   mounted() {
-    emojiArr.forEach((item, index) => {
-      this.emojiChars += `<span data-idnex=${index} >${emoji.replace_colons(
-        item.char
-      )}</span>`;
-    });
+     console.log(this.comments)
   },
   methods: {
-    checkout(event) {
-      let index = event.target.getAttribute("data-idnex");
-      if (!index) return;
-      this.___interText(
-        document.querySelector("textarea"),
-        emojiArr[index].char
-      );
-    },
-    ___interText(textarea, str) {
-      let tclen = textarea.value.length;
-      textarea.focus();
-      if (typeof document.selection != "undefined") {
-        document.selection.createRange().text = str;
-      } else {
-        textarea.value =
-          textarea.value.substr(0, textarea.selectionStart) +
-          str +
-          textarea.value.substring(textarea.selectionStart, tclen);
-      }
-    },
-    async change() {
-      let articleId = this.$route.query.uuid;
-      let content = document.querySelector("textarea").value;
-      let result = await this.$comment(articleId, content);
+    openInput(user) {
+      this.InputBoxID = user.uuid;
     }
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.textarea-container {
-  width: 100%;
-  height: 60px;
-  margin: 10px 0px;
-  display: flex;
-  .el-button {
-    height: 100%;
-  }
-  .el-textarea {
-    width: 90%;
-    margin-right: 6px;
-    /deep/ .el-textarea__inner {
-      height: 100%;
-      font-size: 18px;
-      color: black;
-    }
-  }
-  .comment-submit {
-    margin-left: 6px;
-    height: 100%;
-    flex: 0 1 120px;
-  }
-}
-</style>

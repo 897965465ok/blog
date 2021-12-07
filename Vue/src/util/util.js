@@ -34,12 +34,22 @@ export default {
             })
 
         }
-        Vue.prototype.$comment = async (articleId, content) => {
-            return await Vue.prototype.$api.post('v1/comment', qs.stringify({
-                articleId,
-                content
-            }))
+        Vue.prototype.$comment = async (articleId, content,replyArticle,userName) => {
+            return await Vue.prototype.$api.post('v1/comment',
+                qs.stringify({
+                    articleId,
+                    content,
+                    replyArticle
+                }),
+               )
+        }
 
+        Vue.prototype.$shouldJson = async (articleId, content) => {
+            return await Vue.prototype.$api.post('v1/should',
+                qs.stringify({
+                    articleId,
+                    content
+                }))
         }
 
         Vue.prototype.$generateJSON = async () => {

@@ -1070,9 +1070,13 @@ foreign key(child_id) references father(id) //这种必须要主表主键不然�
  // 敲入命令行show create table child; 
 
 child | CREATE TABLE `child` (  
+  
   KEY `child_id` (`child_id`),   // 创建外键时自动增加的普通索引
+
  //这张表自动创建  CONSTRAINT `child_ibfk_1` 这个东西叫外键索引
+
   CONSTRAINT `child_ibfk_1` FOREIGN KEY (`child_id`) REFERENCES `father` (`id`)
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 |
 
 
