@@ -61,16 +61,17 @@ import Profile from "./Profile/Profile";
 import { mapState, mapActions } from "vuex";
 import Vue from "vue";
 let loading;
-(() => {
-  let once = true;
-  return () => {
-    if (once) {
-      loading = Vue.prototype.$loading();
-      once = false;
-    }
-  };
-})()();
-
+// (() => {
+//   let once = true;
+//   return () => {
+//     if (once) {
+//       loading = Vue.prototype.$loading({
+//         target:"html"
+//       });
+//       once = false;
+//     }
+//   };
+// })()();
 export default {
   data() {
     return {

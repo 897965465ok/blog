@@ -3,11 +3,12 @@
     <el-row class="comment-wrapper   h-16  ">
       <el-col class="textarea-container  h-full ">
         <el-input
-          :placeholder="userName"
+          :placeholder="'回复@' + userName"
           type="textarea"
           resize="none"
           v-model="textarea"
           ref="textarea"
+          @blur="close"
         >
         </el-input>
         <el-popover placement="top-start" trigger="click">
@@ -66,9 +67,10 @@ export default {
         item.char
       )}</span>`;
     });
+
     if (this.reply) {
-      // this.userName = this.reply.User.name;
-      this.uuid = this.reply.uuid;
+      this.userName = this.reply.User.name;
+      this.uuid = this.reply.UUID;
       this.ReplyUser = true;
     } else {
       this.uuid = this.$route.query.uuid;
@@ -96,10 +98,20 @@ export default {
     },
     async change() {
       let content = this.$refs.textarea.$el.querySelector("textarea").value;
-      let result = await this.$comment(this.uuid, content, this.ReplyUser);
+      let result = await this.$comment(
+        this.uuid,
+        content,
+        this.ReplyUser,
+        this.userName
+      );
       console.log(result);
       // 测试方法
       // await this.$shouldJson(this.uuid, content);
+    },
+    close() {
+      setTimeout(() => {
+        this.$emit("close");
+      },1500);
     }
   }
 };

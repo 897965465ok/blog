@@ -35,11 +35,13 @@ export default {
 
         }
         Vue.prototype.$comment = async (articleId, content,replyArticle,userName) => {
+            console.log(articleId, content,replyArticle,userName)
             return await Vue.prototype.$api.post('v1/comment',
                 qs.stringify({
                     articleId,
                     content,
-                    replyArticle
+                    replyArticle,
+                    userName
                 }),
                )
         }

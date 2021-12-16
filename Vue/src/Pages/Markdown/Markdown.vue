@@ -37,12 +37,12 @@ export default {
     viewer.setMarkdown(data);
     // viewer.invoke("setMarkdown", data);
     // 请求评论 // 先不写
-    // let articleId = this.$route.query.uuid;
-    // let { data: comment } = await this.$getComments(articleId);
-    // if (comment.code == 200) {
-    //   console.log(comment);
-    //   this.comments = comment.result;
-    // }
+    let articleId = this.$route.query.uuid;
+    let { data: comment } = await this.$getComments(articleId);
+    if (comment.code == 200) {
+      console.log(comment);
+      this.comments = comment.result;
+    }
   }
 };
 </script>

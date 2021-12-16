@@ -18,16 +18,20 @@
           </p>
         </div>
         <div class="flex  flex-col h-full   cursor-pointer  justify-end ">
-          <!-- <p
-            @click.stop="openInput(item)"
-            class=" text-gray-500 hover:text-purple-500 "
+          <p
+            @click.stop="openInput(index)"
+            class=" text-gray-500 hover:text-purple-500"
           >
             回复
-          </p> -->
+          </p>
         </div>
       </div>
       <!-- <Comment :comments="item.Replys"></Comment> -->
-      <!-- <InputBox :reply="item" v-if="item.uuid == InputBoxID"></InputBox> -->
+      <InputBox
+        @close="close"
+        :reply="item"
+        v-if="index == InputBoxID"
+      ></InputBox>
     </div>
   </div>
 </template>
@@ -40,20 +44,27 @@ export default {
     comments: {
       type: Array,
       default: []
+    },
+    InputBoxID: {
+      type: Number,
+      default: Infinity
     }
   },
   data() {
     return {
-      InputBoxID: "",
+      InputBoxID: Infinity,
       comments: []
     };
   },
   mounted() {
-     console.log(this.comments)
+    console.log(this.comments);
   },
   methods: {
-    openInput(user) {
-      this.InputBoxID = user.uuid;
+    openInput(index) {
+      this.InputBoxID = index;
+    },
+    close() {
+      this.InputBoxID = Infinity;
     }
   }
 };

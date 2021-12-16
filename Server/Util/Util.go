@@ -28,7 +28,7 @@ type Claims struct {
 
 // 生成token
 func GeneractToken(user model.User) (string, error) {
-	expirationTime := time.Now().Add(360 * time.Minute)
+	expirationTime := time.Now().Add(720 * time.Minute)
 	claims := &Claims{
 		UserId: user.ID,
 		StandardClaims: jwt.StandardClaims{
@@ -68,6 +68,15 @@ func ParseToken(tokenString string) (*jwt.Token, *Claims, error) {
 	return token, clauns, err
 }
 
+func GetUserId(tokenString string) (uint, bool) {
+	token, claims, err := ParseToken(tokenString)
+	// token.Valid 如果令牌有效就是ture
+	if token.Valid && err == nil {
+		return claims.UserId, true
+	} else {
+		return 0, false
+	}
+}
 func HasUserName(userName string) bool {
 	DB := common.GetDB()
 	sqlDB, _ := DB.DB()

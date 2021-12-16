@@ -21,7 +21,6 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"github.com/smartwalle/alipay/v3"
 	"github.com/spf13/viper"
-	"gorm.io/gorm"
 )
 
 func Index(Ginctx *gin.Context) {
@@ -31,33 +30,36 @@ func Index(Ginctx *gin.Context) {
 // 注册
 func Register(ctx *gin.Context) {
 	DB := common.GetDB()
-	sqlDB, _ := DB.DB()
-	defer sqlDB.Close()
 	user := &model.User{}
 	DB.AutoMigrate(user)
 	userName := ctx.PostForm("userName")
 	password := ctx.PostForm("password")
 	email := ctx.PostForm("email")
-	if util.HasUserName(userName) {
-		user.Name = userName
-		user.Email = email
-		// 判断加盐是否失败
-		password, err := util.Encipherment([]byte(password))
-		if err == nil {
-			user.Password = password
+	// 用户是否存在
+	if DB.Where("email = ?", email).First(&user).Error == nil {
+		util.Fail(ctx, nil, "用户已存在")
+	} else {
+		if util.HasUserName(userName) {
+			user.Name = userName
+			user.Email = email
+			// 判断加盐是否失败
+			password, err := util.Encipherment([]byte(password))
+			if err == nil {
+				user.Password = password
+			}
+			DB.Create(user)
+			util.Success(ctx, nil, "注册成功")
+			return
 		}
-		DB.Create(user)
-		util.Success(ctx, nil, "注册成功")
-		return
+
 	}
-	util.Fail(ctx, nil, "用户已存在")
+
 }
 
 // 登陆
 func Login(ctx *gin.Context) {
 	DB := common.GetDB()
-	sqlDB, _ := DB.DB()
-	defer sqlDB.Close()
+
 	user := &model.User{}
 	userName := ctx.PostForm("userName")
 	password := ctx.PostForm("password")
@@ -106,8 +108,7 @@ func BannerPiture(ctx *gin.Context) {
 // 创建标签
 func CreateTag(ctx *gin.Context) {
 	DB := common.GetDB()
-	sqlDB, _ := DB.DB()
-	defer sqlDB.Close()
+
 	DB.AutoMigrate(&model.Tags{})
 	tags := &model.Tags{ArticleTag: ctx.Query("article_tag")}
 	if DB.Create(tags).Error != nil {
@@ -125,8 +126,7 @@ func CreateTag(ctx *gin.Context) {
 
 func QueryAllTag(ctx *gin.Context) {
 	DB := common.GetDB()
-	sqlDB, _ := DB.DB()
-	defer sqlDB.Close()
+
 	result := &[]model.Tags{}
 	DB.Find(result)
 	ctx.JSON(http.StatusOK, gin.H{
@@ -138,8 +138,7 @@ func QueryAllTag(ctx *gin.Context) {
 // 创建文章
 func CreateArticle(ctx *gin.Context) {
 	DB := common.GetDB()
-	sqlDB, _ := DB.DB()
-	defer sqlDB.Close()
+
 	DB.AutoMigrate(&model.Article{})
 	Article := &model.Article{Tag: ctx.Query("tag")}
 	DB.Create(Article)
@@ -153,8 +152,7 @@ func CreateArticle(ctx *gin.Context) {
 
 func QueryAllArticle(ctx *gin.Context) {
 	DB := common.GetDB()
-	sqlDB, _ := DB.DB()
-	defer sqlDB.Close()
+
 	DB.AutoMigrate(&model.Article{})
 	result := &[]model.Article{}
 	DB.Find(result)
@@ -168,8 +166,6 @@ func QueryAllArticle(ctx *gin.Context) {
 
 func QueryOneArticle(ctx *gin.Context) {
 	DB := common.GetDB()
-	sqlDB, _ := DB.DB()
-	defer sqlDB.Close()
 	UUID := ctx.Query("uuid")
 	result := &model.Article{}
 	DB.Where("uuid = ?", UUID).First(result)
@@ -183,8 +179,7 @@ func QueryOneArticle(ctx *gin.Context) {
 
 func DeleteArticle(ctx *gin.Context) {
 	DB := common.GetDB()
-	sqlDB, _ := DB.DB()
-	defer sqlDB.Close()
+
 	UUID := ctx.Query("uuid")
 	result := &model.Article{}
 	DB.Where("uuid = ?", UUID).First(result)
@@ -198,8 +193,6 @@ func DeleteArticle(ctx *gin.Context) {
 // 根据标签查询分类
 func Query(ctx *gin.Context) {
 	DB := common.GetDB()
-	sqlDB, _ := DB.DB()
-	defer sqlDB.Close()
 	var articles []model.Article
 	Sql := fmt.Sprintf(
 		`SELECT * FROM  article  WHERE article.tag = 
@@ -220,7 +213,6 @@ func SendEamil(ctx *gin.Context) {
 	subject := "Jiang的博客"
 	// 邮件正文
 	body := "如果我是DJ你会爱我吗"
-
 	if util.SendEamil(mailTo, subject, body) != nil {
 		util.Fail(ctx, nil, "发送失败")
 	} else {
@@ -256,8 +248,7 @@ func ReturnJson(ctx *gin.Context) {
 // 添加网址
 func ADDFavorite(ctx *gin.Context) {
 	DB := common.GetDB()
-	sqlDB, _ := DB.DB()
-	defer sqlDB.Close()
+
 	DB.AutoMigrate(&model.Favorites{})
 	Favorites := &model.Favorites{
 		Name: ctx.Query("name"),
@@ -273,8 +264,7 @@ func ADDFavorite(ctx *gin.Context) {
 // 查询全部收藏
 func QueryFavorites(ctx *gin.Context) {
 	DB := common.GetDB()
-	sqlDB, _ := DB.DB()
-	defer sqlDB.Close()
+
 	result := &[]model.Favorites{}
 	DB.Find(result)
 	ctx.JSON(http.StatusOK, gin.H{
@@ -286,8 +276,7 @@ func QueryFavorites(ctx *gin.Context) {
 // 删除一个
 func DeleteFavorite(ctx *gin.Context) {
 	DB := common.GetDB()
-	sqlDB, _ := DB.DB()
-	defer sqlDB.Close()
+
 	UUID := ctx.Query("uuid")
 	result := &model.Favorites{}
 	DB.Where("uuid = ?", UUID).First(result)
@@ -301,28 +290,22 @@ func DeleteFavorite(ctx *gin.Context) {
 // 观看次数
 func WatchNumber(ctx *gin.Context) {
 	DB := common.GetDB()
-	sqlDB, _ := DB.DB()
-	defer sqlDB.Close()
 	UUID := ctx.Query("uuid")
-	result := &model.Article{}
-	DB.Where("uuid = ?", UUID).First(result)
-	DB.First(result).Update("WhatchNumber", result.WhatchNumber+1)
+	article := &model.Article{}
+	DB.Where("uuid = ?", UUID).First(&article).Update("WhatchNumber", article.WhatchNumber+1)
 	ctx.JSON(http.StatusOK, gin.H{
 		"code":   200,
-		"result": result,
+		"result": article,
 	})
 }
 
 // Like
 func Like(ctx *gin.Context) {
 	DB := common.GetDB()
-	sqlDB, _ := DB.DB()
-	defer sqlDB.Close()
 	UUID := ctx.Query("uuid")
 	result := &model.Article{}
 	DB.AutoMigrate(&model.Article{})
-	DB.Where("uuid = ?", UUID).First(result)
-	DB.First(result).Update("Like", result.Like+1)
+	DB.Where("uuid = ?", UUID).First(result).Update("Like", result.Like+1)
 	ctx.JSON(http.StatusOK, gin.H{
 		"code":   200,
 		"result": result,
@@ -398,41 +381,29 @@ func TestShould(ctx *gin.Context) {
 // 评论 文章
 func Comment(ctx *gin.Context) {
 	DB := common.GetDB()
-	sqlDB, _ := DB.DB()
 	DB.Set("gorm:table_options", "ENGINE=InnoDB").
 		AutoMigrate(&model.User{}, &model.Comment{}, &model.Article{})
-	defer sqlDB.Close()
 	// 判断是否回复文章
-	replyArticle := ctx.PostForm("replyArticle")
-	boolean, _ := strconv.ParseBool(replyArticle)
+	tokenString := ctx.GetHeader("Authorization")[7:]
+	userId, err := util.GetUserId(tokenString)
+	if !err {
+		ctx.JSON(http.StatusOK, gin.H{
+			"code":   http.StatusBadRequest,
+			"result": "失败",
+		})
+	}
+	boolean, _ := strconv.ParseBool(ctx.PostForm("replyArticle"))
 	uuid := ctx.PostForm("articleId")
 	content := ctx.PostForm("content")
-
 	user := model.User{}
 	// inerface 转结构体
-	interUser, exists := ctx.Get("user")
-	//  user是否存在
-	if exists {
-		mapstructure.Decode(interUser, user)
-	}
-	if DB.Select("id").First(&user).Error == nil {
-		if boolean { // 回复用户
-			// var model, comment, CommentSlice = model.Comment{}, model.Comment{}, []*model.Comment{}
-			// // 查出id
-			// DB.Select("id").Where("uuid = ?", uuid).First(&model)
-			// DB.Model(&user).Association("Comment").Append(&comment)
-			// comment.Content = content
-			// comment.ISReply = boolean
-			// comment.To = "Jiang"
-			// comment.Reply_Id = user.ID
-			// CommentSlice = append(CommentSlice, &comment)
-			// DB.Model(&model).Association("Replys").Append(CommentSlice)
-			// ctx.JSON(http.StatusOK, gin.H{
-			// 	"code":   200,
-			// 	"result": "评论成功",
-			// })
-
-		} else {
+	// interUser, exists := ctx.Get("user")
+	// //  user是否存在
+	// if exists {
+	// 	mapstructure.Decode(interUser, user)
+	// }
+	if DB.Where("id = ?", userId).First(&user).Error == nil {
+		if !boolean {
 			// 回复文章
 			article := model.Article{UUID: uuid}
 			comment := model.Comment{Content: content}
@@ -443,13 +414,29 @@ func Comment(ctx *gin.Context) {
 				DB.Model(&article).Association("Comment").Append(&comment)
 				ctx.JSON(http.StatusOK, gin.H{
 					"code":   http.StatusOK,
-					"result": "成功",
+					"result": "回复文章成功",
 				})
 
 			} else {
 				ctx.JSON(http.StatusOK, gin.H{
 					"code":   http.StatusBadRequest,
 					"result": "失败",
+				})
+			}
+		} else {
+			userComent := model.Comment{}
+			if DB.Where("uuid = ?", uuid).First(&userComent).Error == nil {
+				replyComent := model.Comment{
+					Content: content,
+					ISReply: boolean,
+					To:      ctx.PostForm("userName"),
+				}
+				DB.Model(&user).Association("Comment").Append(&replyComent)
+				userComent.Replys = append(userComent.Replys, replyComent)
+				DB.Save(&userComent)
+				ctx.JSON(http.StatusOK, gin.H{
+					"code":   200,
+					"result": "回复评论成功",
 				})
 			}
 
@@ -462,23 +449,31 @@ func Comment(ctx *gin.Context) {
 // 获取评论
 func GetComment(ctx *gin.Context) {
 	DB := common.GetDB()
-	sqlDB, _ := DB.DB()
-	defer sqlDB.Close()
 	article := model.Article{UUID: ctx.Query("articleId")}
 	if DB.Select("id").Where("uuid=?", article.UUID).First(&article).Error == nil &&
-		DB.Model(&article).
-			// Preload("Comment.Replys").
-			Preload("Comment.User",
-				func(DB *gorm.DB) *gorm.DB {
-					// 屏蔽密码
-					return DB.Select("name", "uuid", "id", "email")
-				}).
+		DB.Model(&article).Preload("Comment.Replys").
+			// Preload("Comment.User",
+			// 	func(DB *gorm.DB) *gorm.DB {
+			// 		// 屏蔽密码
+			// 		return DB.Select("name", "uuid", "id", "email")
+			// 	}).
 			Preload("Comment").
 			First(&article).Error == nil {
 		// 找出user并整合
+		var result []map[string]interface{}
+		for _, item := range article.Comment {
+			user := model.User{}
+			container := make(map[string]interface{})
+			DB.Select("name", "uuid", "id", "email").Where("id=?", item.UserID).First(&user)
+			// 结构体转map
+			mapstructure.Decode(item, &container)
+			container["User"] = user
+			result = append(result, container)
+		}
+
 		ctx.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusOK,
-			"result":  article.Comment,
+			"result":  result,
 			"message": "成功",
 		})
 
@@ -607,8 +602,7 @@ func WsCnection(ctx *gin.Context) {
 // 访问Wallhaven
 func Wallhaven(ctx *gin.Context) {
 	DB := common.GetDB()
-	sqlDB, _ := DB.DB()
-	defer sqlDB.Close()
+
 	Img := &[]model.ImgUrl{}
 	err := DB.Limit(216).Offset(1).Select([]string{"small", "original", "large", "uuid", "id"}).Find(Img).Error
 	if err != nil {
