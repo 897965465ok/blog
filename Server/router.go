@@ -14,7 +14,6 @@ import (
 // DELETE /product/ID：删除某个商品
 // GET /product/ID/purchase ：列出某个指定商品的所有投资者
 // get /product/ID/purchase/ID：获取某个指定商品的指定投资者信息
-
 func CollectRouter(r *gin.Engine) *gin.Engine {
 	r.Use(middleware.Cors())
 	r.Static("/static", "./view/static")
@@ -74,6 +73,7 @@ func CollectRouter(r *gin.Engine) *gin.Engine {
 		V1.GET("/comment", middleware.AuthMiddleware(), controller.GetComment)
 		V1.POST("/wallhaven2", controller.Wallhaven_V2)
 		V1.POST("/should", controller.TestShould)
+		V1.GET("/oauth", controller.Oauth)
 
 	}
 	return r

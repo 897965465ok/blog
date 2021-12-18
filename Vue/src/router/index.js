@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import  Markdown from '@/Pages/Markdown/Markdown.vue'
+import Markdown from '@/Pages/Markdown/Markdown.vue'
 Vue.use(Router)
 const router = new Router({
   routes: [
@@ -53,9 +53,10 @@ const router = new Router({
 })
 //  路由拦击代码
 // router.beforeEach((to, from, next) => {
-//   let result = to.matched.some(record => record.meta.requiresAuth)
+//   let path = to.matched.some(record => record.meta.requiresAuth)
+//   console.log(path)
 //   // 如果是login就是放行
-//   if (result) {
+//   if (path) {
 //     next()
 //   } else {
 //     // 如果不是login

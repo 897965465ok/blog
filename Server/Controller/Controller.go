@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"sync"
 
 	"github.com/buger/jsonparser"
@@ -691,5 +692,24 @@ func Wallhaven_V2(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"code":      200,
 		"img_index": taskNumber,
+	})
+}
+
+func Oauth(ctx *gin.Context) {
+	var clientId string = viper.GetString("clientId")
+	var clientSecret string = viper.GetString("clientSecret")
+	code := ctx.Query("code")
+	redirect_uri := "http://www.mrjiang.work/v1/oauth"
+	Url := fmt.Sprintf("grant_type=authorization_code&code=%s&client_id=%s&redirect_uri=%s&client_secret=%s", code, clientId, redirect_uri, clientSecret)
+	response, err := http.Post("https://gitee.com/oauth/token", "application/x-www-form-urlencoded", strings.NewReader(Url))
+	if err != nil || response.StatusCode != http.StatusOK {
+		ctx.Status(http.StatusServiceUnavailable) // 503
+		return
+	}
+	defer response.Body.Close()
+	str, _ := ioutil.ReadAll(response.Body)
+	ctx.JSON(http.StatusOK, gin.H{
+		"code":          200,
+		"refresh_token": string(str),
 	})
 }

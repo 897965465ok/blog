@@ -1,6 +1,6 @@
 import axios from 'axios'
 let api = axios.create({
-    // baseURL:"http://146.56.206.160:3800",
+    // baseURL:"http://146.56.206.160",
 })
 api.interceptors.response.use((config) => {
     let { status, data } = config

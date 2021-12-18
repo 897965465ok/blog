@@ -106,7 +106,7 @@ export default {
       tags: (await this.$api.get("v1/tags")).data.result,
     });
     await this.changeAll((await this.$api.get("v1/articles")).data.result);
-    loading.close();
+    // loading.close();
   },
 
   computed: mapState({
