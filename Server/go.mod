@@ -12,6 +12,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
+	github.com/gin-contrib/multitemplate v0.0.0-20211002122701-e9e3201b87a0
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gorilla/websocket v1.4.2

@@ -1,6 +1,7 @@
 import axios from 'axios'
 let api = axios.create({
     // baseURL:"http://146.56.206.160",
+
 })
 api.interceptors.response.use((config) => {
     let { status, data } = config
@@ -17,13 +18,16 @@ api.interceptors.response.use((config) => {
         case 500: {
             return config
         }
+        case 302: {
+            return config
+        }
         default: {
             return config
         }
     }
 },
     (error) => {
-
+        console.log("302", error)
         return new Promise.reject(error)
     })
 

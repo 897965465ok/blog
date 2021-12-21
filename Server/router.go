@@ -4,6 +4,8 @@ import (
 	controller "main/Controller"
 	middleware "main/Middleware"
 
+	"github.com/gin-contrib/multitemplate"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,11 +16,20 @@ import (
 // DELETE /product/ID：删除某个商品
 // GET /product/ID/purchase ：列出某个指定商品的所有投资者
 // get /product/ID/purchase/ID：获取某个指定商品的指定投资者信息
+func createRender() multitemplate.Renderer {
+	r := multitemplate.NewRenderer()
+	r.AddFromFiles("index", "./view/index.html")
+	r.AddFromFiles("oauth", "./view/oauth.html")
+	return r
+}
+
 func CollectRouter(r *gin.Engine) *gin.Engine {
 	r.Use(middleware.Cors())
 	r.Static("/static", "./view/static")
 	r.Static("/v1/markdown", "./markdown")
-	r.LoadHTMLFiles("./view/index.tmpl")
+	// r.LoadHTMLFiles("./view/index.tmpl")
+	// 更换成自己的模板
+	r.HTMLRender = createRender()
 	r.GET("/", controller.Index)
 	r.GET("/ws", controller.WsCnection)
 	r.NoRoute(controller.Index)

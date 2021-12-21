@@ -6,7 +6,6 @@ const path = require('path')
 
 module.exports = {
   dev: {
-
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
@@ -44,6 +43,14 @@ module.exports = {
         },
         ws:true,
       },
+      '/Oauth': {
+        target: 'https://gitee.com/oauth/authorize',  //目标接口域名
+        changeOrigin: true,//是否允许跨域
+        pathRewrite: {
+          '^/Oauth': ""                  //如果地址不想带api就这样替换掉
+        },
+        secure: true, // 如果是 https ,需要开启这个选项
+      },
     },
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
@@ -69,11 +76,12 @@ module.exports = {
     cssSourceMap: true
   },
 
+  //编译后路径存放的配置
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../dist/index.html'),
+    index: path.resolve(__dirname, '../../Server/view/index.html'),
     // Paths
-    assetsRoot: path.resolve(__dirname, '../dist'),
+    assetsRoot: path.resolve(__dirname, '../../Server/view'),
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
 

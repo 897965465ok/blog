@@ -25,7 +25,7 @@ import (
 )
 
 func Index(Ginctx *gin.Context) {
-	Ginctx.HTML(http.StatusOK, "index.tmpl", gin.H{})
+	Ginctx.HTML(http.StatusOK, "index", gin.H{})
 }
 
 // 注册
@@ -704,12 +704,16 @@ func Oauth(ctx *gin.Context) {
 	response, err := http.Post("https://gitee.com/oauth/token", "application/x-www-form-urlencoded", strings.NewReader(Url))
 	if err != nil || response.StatusCode != http.StatusOK {
 		ctx.Status(http.StatusServiceUnavailable) // 503
+		fmt.Println("出错", response.StatusCode)
 		return
 	}
 	defer response.Body.Close()
 	str, _ := ioutil.ReadAll(response.Body)
-	ctx.JSON(http.StatusOK, gin.H{
-		"code":          200,
-		"refresh_token": string(str),
+	result := make(gin.H)
+	result["code"] = 200
+	jsonparser.ObjectEach(str, func(key, value []byte, dataType jsonparser.ValueType, offset int) error {
+		result[string(key)] = string(value)
+		return nil
 	})
+	ctx.HTML(http.StatusOK, "oauth", result)
 }

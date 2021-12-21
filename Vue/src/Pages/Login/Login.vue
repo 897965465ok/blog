@@ -46,19 +46,13 @@
 import qs from "qs";
 export default {
   name: "Login",
-
-  created() {
-    let clientId ="a480ace6ca2d676d30f1c932936da15c256db9692834a5107ca910586470ccc1";
-    let redirect_uri = "http://www.mrjiang.work/v1/oauth";
-    let url = `https://gitee.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirect_uri}&response_type=code`;
-    
-  },
   data() {
     return {
       form: {
         username: "",
         password: "",
         email: "",
+        url: "",
       },
 
       // 表单验证，需要在 el-form-item 元素中增加 prop 属性
@@ -79,6 +73,7 @@ export default {
       },
     };
   },
+
   methods: {
     onSubmit(formName) {
       // 为表单绑定验证功能
@@ -100,7 +95,47 @@ export default {
         }
       });
     },
-    oauth(url) {},
+    openwindow(url, name, iWidth, iHeight) {
+      var url; //转向网页的地址;
+      var name; //网页名称，可为空;
+      var iWidth; //弹出窗口的宽度;
+      var iHeight; //弹出窗口的高度;
+      var iTop = (window.screen.availHeight - 30 - iHeight) / 2; //获得窗口的垂直位置;
+      var iLeft = (window.screen.availWidth - 10 - iWidth) / 2; //获得窗口的水平位置;
+      return window.open(
+        url,
+        name,
+        "height=" +
+          iHeight +
+          ",,innerHeight=" +
+          iHeight +
+          ",width=" +
+          iWidth +
+          ",innerWidth=" +
+          iWidth +
+          ",top=" +
+          iTop +
+          ",left=" +
+          iLeft +
+          ",toolbar=no,menubar=no,scrollbars=auto,resizeable=no,location=no,status=no"
+      );
+    },
+    oauth() {
+      this.$nextTick(() => {
+        let client_id =
+          "a480ace6ca2d676d30f1c932936da15c256db9692834a5107ca910586470ccc1";
+        let redirect_uri = "http://www.mrjiang.work/v1/oauth";
+        let url = `https://gitee.com/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code`;
+        let newWindows = this.openwindow(url, "", "500", "500");
+        window.addEventListener("message",event=> {
+          if (event.origin === "http://www.mrjiang.work") {
+   
+            console.log(event.data)
+                     newWindows.close();
+          }
+        });
+      });
+    },
   },
 };
 </script>
