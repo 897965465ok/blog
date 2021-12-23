@@ -603,9 +603,8 @@ func WsCnection(ctx *gin.Context) {
 // 访问Wallhaven
 func Wallhaven(ctx *gin.Context) {
 	DB := common.GetDB()
-
 	Img := &[]model.ImgUrl{}
-	err := DB.Limit(216).Offset(1).Select([]string{"small", "original", "large", "uuid", "id"}).Find(Img).Error
+	err := DB.Select([]string{"small", "original", "large", "uuid", "id"}).Limit(216).Offset(1).Find(Img).Error
 	if err != nil {
 		ctx.JSON(http.StatusOK, gin.H{
 			"code":   http.StatusNotFound,
@@ -696,15 +695,45 @@ func Wallhaven_V2(ctx *gin.Context) {
 }
 
 func Oauth(ctx *gin.Context) {
-	var clientId string = viper.GetString("clientId")
-	var clientSecret string = viper.GetString("clientSecret")
+	var clientId string
+	var clientSecret string
+	var Args string
+	var Url string
+	origin := ctx.Request.Host
 	code := ctx.Query("code")
-	redirect_uri := "http://www.mrjiang.work/v1/oauth"
-	Url := fmt.Sprintf("grant_type=authorization_code&code=%s&client_id=%s&redirect_uri=%s&client_secret=%s", code, clientId, redirect_uri, clientSecret)
-	response, err := http.Post("https://gitee.com/oauth/token", "application/x-www-form-urlencoded", strings.NewReader(Url))
+	var redirect_uri string = "http://www.mrjiang.work/v1/oauth"
+	switch {
+	case strings.Contains(origin, "gitee"):
+		{
+			fmt.Println("gitee访问")
+			clientId = viper.GetString("GieeClientId")
+			clientSecret = viper.GetString("GieeClientSecret")
+			Url = "https://gitee.com/oauth/token"
+			Args = fmt.Sprintf("grant_type=authorization_code&code=%s&client_id=%s&redirect_uri=%s&client_secret=%s", code, clientId, redirect_uri, clientSecret)
+		}
+	case strings.Contains(origin, "github"):
+		{
+			fmt.Println("github访问")
+			clientId = viper.GetString("GithubClientId")
+			clientSecret = viper.GetString("GithubClientSecret")
+			Url = "https://github.com/oauth/token"
+			Args = fmt.Sprintf("grant_type=authorization_code&code=%s&client_id=%s&redirect_uri=%s&client_secret=%s", code, clientId, redirect_uri, clientSecret)
+		}
+	default:
+		{
+			ctx.Status(http.StatusServiceUnavailable) // 503
+			ctx.JSON(http.StatusServiceUnavailable, gin.H{
+				"code":    http.StatusServiceUnavailable,
+				"message": "错误的访问",
+			})
+			return
+		}
+	}
+
+	response, err := http.Post(Url, "application/x-www-form-urlencoded", strings.NewReader(Args))
 	if err != nil || response.StatusCode != http.StatusOK {
 		ctx.Status(http.StatusServiceUnavailable) // 503
-		fmt.Println("出错", response.StatusCode)
+		// fmt.Println("出错", response.StatusCode)
 		return
 	}
 	defer response.Body.Close()
@@ -715,5 +744,6 @@ func Oauth(ctx *gin.Context) {
 		result[string(key)] = string(value)
 		return nil
 	})
+
 	ctx.HTML(http.StatusOK, "oauth", result)
 }

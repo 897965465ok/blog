@@ -34,9 +34,14 @@
       </el-form-item>
       <el-form-item class="flex justify-between">
         <el-button @click="onSubmit('loginForm')">登录</el-button>
-        <el-button class="iconfont icon-huaban88" @click="oauth()"></el-button>
-        <el-button class="iconfont icon-mayun" @click="oauth()"></el-button>
-        <el-button class="iconfont icon-qq" @click="oauth()"></el-button>
+        <el-button
+          class="iconfont icon-huaban88"
+          @click="oauth('github')"
+        ></el-button>
+        <el-button
+          class="iconfont icon-mayun"
+          @click="oauth('gitee')"
+        ></el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -44,6 +49,8 @@
 
 <script>
 import qs from "qs";
+import { mapActions } from "vuex";
+import { getOauthInfo } from "../../api/BlogApi";
 export default {
   name: "Login",
   data() {
@@ -52,9 +59,8 @@ export default {
         username: "",
         password: "",
         email: "",
-        url: "",
+        childWindow: "",
       },
-
       // 表单验证，需要在 el-form-item 元素中增加 prop 属性
       rules: {
         username: [
@@ -73,8 +79,25 @@ export default {
       },
     };
   },
-
+  mounted() {
+    window.removeEventListener("message", this.callbac);
+    window.addEventListener("message", this.callbac);
+  },
+  unmounted() {
+    window.removeEventListener("message", this.callbac);
+  },
   methods: {
+    async callbac(event) {
+      if (event.origin === "http://www.mrjiang.work") {
+        event.data.origin = "gitee";
+        this.saveOauth(event.data);
+        console.log(event.data);
+        let result = await getOauthInfo(event.data);
+        setTimeout(() => {
+          this.childWindow.close();
+        }, 1000);
+      }
+    },
     onSubmit(formName) {
       // 为表单绑定验证功能
       this.$refs[formName].validate(async (valid) => {
@@ -85,7 +108,6 @@ export default {
             qs.stringify({ userName, password, email }),
             { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
           );
-          console.log(result);
           if (result.code == 200) {
             localStorage.setItem("token", "Bearer " + result.data.token);
             this.$router.push("/");
@@ -120,22 +142,27 @@ export default {
           ",toolbar=no,menubar=no,scrollbars=auto,resizeable=no,location=no,status=no"
       );
     },
-    oauth() {
+    oauth(website) {
+      let url;
+      const redirect_uri = "http://www.mrjiang.work/v1/oauth";
       this.$nextTick(() => {
-        let client_id =
-          "a480ace6ca2d676d30f1c932936da15c256db9692834a5107ca910586470ccc1";
-        let redirect_uri = "http://www.mrjiang.work/v1/oauth";
-        let url = `https://gitee.com/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code`;
-        let newWindows = this.openwindow(url, "", "500", "500");
-        window.addEventListener("message",event=> {
-          if (event.origin === "http://www.mrjiang.work") {
-   
-            console.log(event.data)
-                     newWindows.close();
+        switch (website) {
+          case "github": {
+            let client_id = "471c5cbd780a0ab68c77";
+            url = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code`;
+            break;
           }
-        });
+          case "gitee": {
+            let client_id =
+              "a480ace6ca2d676d30f1c932936da15c256db9692834a5107ca910586470ccc1";
+            url = `https://gitee.com/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code`;
+            break;
+          }
+        }
+        this.childWindow = this.openwindow(url, "", "500", "500");
       });
     },
+    ...mapActions({ saveOauth: "saveOauth" }),
   },
 };
 </script>

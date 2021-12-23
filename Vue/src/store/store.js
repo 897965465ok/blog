@@ -10,7 +10,8 @@ const store = new Vuex.Store({
     similar: [],
     recommen: {},
     token: "",
-    router:[]
+    router: [],
+    oauthInfo: {}
   },
   getters: {
     token(state) {
@@ -18,6 +19,9 @@ const store = new Vuex.Store({
     },
     pictures(state) {
       return state.pictures
+    },
+    oauth(state) {
+      return state.oauth
     }
   },
 
@@ -26,17 +30,19 @@ const store = new Vuex.Store({
       state.articlers = articlers
     },
     GET_PICTURES(state, result) {
-      
-      state.pictures= result.data.hits.map(url=> url.largeImageURL)
+      state.pictures = result.data.hits.map(url => url.largeImageURL)
     },
-     WALLHAVEN(state, result){
-      state.pictures =result
+    WALLHAVEN(state, result) {
+      state.pictures = result
     },
     SET_RECOMMEN(state, recommen) {
       state.recommen = { ...recommen }
     },
     SET_SIMILAR(state, similar) {
       state.similar = similar
+    },
+    SAVE_OAUTH(state, oauth) {
+      state.oauthInfo = oauth
     }
   },
   actions: {
@@ -52,14 +58,17 @@ const store = new Vuex.Store({
     async setSimilar(context, similar) {
       context.commit('SET_SIMILAR', similar)
     },
-    async wallhaven(context,result){
-      context.commit('WALLHAVEN',result)
+    async wallhaven(context, result) {
+      context.commit('WALLHAVEN', result)
+    },
+    async saveOauth(context, oauth) {
+      context.commit('SAVE_OAUTH', oauth)
     }
 
   },
   plugins: [window.createPersistedState({
     storage: window.sessionStorage
-})]
+  })]
 
 })
 export default store

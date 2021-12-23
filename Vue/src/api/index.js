@@ -27,7 +27,6 @@ api.interceptors.response.use((config) => {
     }
 },
     (error) => {
-        console.log("302", error)
         return new Promise.reject(error)
     })
 
@@ -42,7 +41,4 @@ api.interceptors.request.use((config) => {
 }, (error) => {
     return Promise.reject(error);
 });
-
 export { api }
-
-
