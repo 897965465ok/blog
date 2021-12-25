@@ -40,19 +40,16 @@ type User struct {
 	Professional string
 	// 状态
 	Status   string
-	Email    string    `grom:"type:varchar(40); unique; not null;"  json:"email" `
-	Name     string    `grom:"type:varchar(40); not null;"  json:"name"`
-	Password string    `grom:"type:varchar(50); not null;"  json:"password;"`
-	Comment  []Comment `gorm:"polymorphic:User;"`
+	Email    string `grom:"type:varchar(40); unique; not null;"  json:"email" `
+	Name     string `grom:"type:varchar(40); not null;"  json:"name"`
+	Password string `grom:"type:varchar(50); not null;"  json:"password;"`
 }
 
 type Comment struct {
 	gorm.Model
-	UserID      uint
-	UserType    string
-	ArticleID   uint
-	ArticleType string
-	UUID        string `gorm:"type:varchar(50); not null;" json:"uuid"`
+	UserID    uint
+	ArticleID uint
+	UUID      string `gorm:"type:varchar(50); not null;" json:"uuid"`
 	// 暂时不做
 	Replys    []Comment `gorm:"foreignkey:ManagerID"`
 	ManagerID *uint
@@ -69,8 +66,7 @@ type Comment struct {
 // 文章
 type Article struct {
 	gorm.Model
-	Comment []Comment `gorm:"polymorphic:Article;"`
-	UUID    string    `gorm:"type:varchar(50); not null;" json:"uuid"`
+	UUID string `gorm:"type:varchar(50); not null;" json:"uuid"`
 	// 浏览量
 	// 	BrowseCount int64
 	WhatchNumber int `gorm:" DEFAULT 0 " json:"whatch_number"`

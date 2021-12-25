@@ -144,17 +144,17 @@ export default {
     },
     oauth(website) {
       let url;
-      const redirect_uri = "http://www.mrjiang.work/v1/oauth";
       this.$nextTick(() => {
         switch (website) {
           case "github": {
+            let redirect_uri = "http://www.mrjiang.work/v1/oauth?origin=github";
             let client_id = "471c5cbd780a0ab68c77";
-            url = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code`;
+            url = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}`;
             break;
           }
           case "gitee": {
-            let client_id =
-              "a480ace6ca2d676d30f1c932936da15c256db9692834a5107ca910586470ccc1";
+            let redirect_uri = "http://www.mrjiang.work/v1/oauth?origin=gitee";
+            let client_id ="a480ace6ca2d676d30f1c932936da15c256db9692834a5107ca910586470ccc1";
             url = `https://gitee.com/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code`;
             break;
           }

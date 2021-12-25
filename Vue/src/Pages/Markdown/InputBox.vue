@@ -1,14 +1,14 @@
 <template>
   <el-row>
-    <el-row class="comment-wrapper   h-16  ">
-      <el-col class="textarea-container  h-full ">
+    <el-row class="comment-wrapper h-16">
+      <el-col class="textarea-container h-full">
         <el-input
           :placeholder="'回复@' + userName"
           type="textarea"
           resize="none"
           v-model="textarea"
           ref="textarea"
-          @blur="close"
+         
         >
         </el-input>
         <el-popover placement="top-start" trigger="click">
@@ -37,16 +37,16 @@ export default {
   props: {
     reply: {
       type: Object,
-      default: null
+      default: null,
     },
     userName: {
       type: String,
-      default: "发一条友善的评论"
+      default: "发一条友善的评论",
     },
     ReplyUser: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
@@ -56,9 +56,9 @@ export default {
       enojiStyle: {
         fontSize: "20px",
         width: "280px",
-        cursor: "pointer"
+        cursor: "pointer",
       },
-      uuid: ""
+      uuid: "",
     };
   },
   mounted() {
@@ -70,7 +70,7 @@ export default {
 
     if (this.reply) {
       this.userName = this.reply.User.name;
-      this.uuid = this.reply.UUID;
+      this.uuid = this.reply.leave || this.reply.UUID;
       this.ReplyUser = true;
     } else {
       this.uuid = this.$route.query.uuid;
@@ -111,9 +111,9 @@ export default {
     close() {
       setTimeout(() => {
         this.$emit("close");
-      },1500);
-    }
-  }
+      }, 1500);
+    },
+  },
 };
 </script>
 

@@ -60,11 +60,9 @@ func Register(ctx *gin.Context) {
 // 登陆
 func Login(ctx *gin.Context) {
 	DB := common.GetDB()
-
 	user := &model.User{}
 	userName := ctx.PostForm("userName")
 	password := ctx.PostForm("password")
-
 	if DB.Where("name = ?", userName).First(&user).Error == nil {
 		fmt.Println(userName, password)
 		if util.Decryption(user.Password, password) {
@@ -153,7 +151,6 @@ func CreateArticle(ctx *gin.Context) {
 
 func QueryAllArticle(ctx *gin.Context) {
 	DB := common.GetDB()
-
 	DB.AutoMigrate(&model.Article{})
 	result := &[]model.Article{}
 	DB.Find(result)
@@ -407,12 +404,16 @@ func Comment(ctx *gin.Context) {
 		if !boolean {
 			// 回复文章
 			article := model.Article{UUID: uuid}
-			comment := model.Comment{Content: content}
 			if DB.Select("id").Where("uuid = ?", article.UUID).First(&article).Error == nil {
-				comment.Reply_Id = article.ID
-				comment.ISReply = boolean
-				DB.Model(&user).Association("Comment").Append(&comment)
-				DB.Model(&article).Association("Comment").Append(&comment)
+				// DB.Model(&user).Association("Comment").Append(&comment)
+				// DB.Model(&article).Association("Comment").Append(&comment)
+				DB.Create(&model.Comment{
+					Content:   content,
+					UserID:    user.ID,
+					ArticleID: article.ID,
+					Reply_Id:  article.ID,
+					ISReply:   boolean,
+				})
 				ctx.JSON(http.StatusOK, gin.H{
 					"code":   http.StatusOK,
 					"result": "回复文章成功",
@@ -432,7 +433,8 @@ func Comment(ctx *gin.Context) {
 					ISReply: boolean,
 					To:      ctx.PostForm("userName"),
 				}
-				DB.Model(&user).Association("Comment").Append(&replyComent)
+				// DB.Model(&user).Association("Comment").Append(&replyComent)
+				replyComent.UserID = user.ID
 				userComent.Replys = append(userComent.Replys, replyComent)
 				DB.Save(&userComent)
 				ctx.JSON(http.StatusOK, gin.H{
@@ -447,34 +449,35 @@ func Comment(ctx *gin.Context) {
 
 }
 
+// 递归
+func tree(commons []model.Comment) []map[string]interface{} {
+	DB := common.GetDB()
+	Replys := []model.Comment{}
+	var result []map[string]interface{}
+	for _, item := range commons {
+		user := model.User{}
+		container := make(map[string]interface{})
+		DB.Select("name", "uuid", "id", "email").Where("id=?", item.UserID).First(&user)
+		DB.Where("manager_id=?", item.ID).Find(&Replys)
+		// 结构体转map
+		mapstructure.Decode(item, &container)
+		container["User"] = user
+		container["Replys"] = tree(Replys)
+		result = append(result, container)
+	}
+	return result
+}
+
 // 获取评论
 func GetComment(ctx *gin.Context) {
 	DB := common.GetDB()
 	article := model.Article{UUID: ctx.Query("articleId")}
+	commons := []model.Comment{}
 	if DB.Select("id").Where("uuid=?", article.UUID).First(&article).Error == nil &&
-		DB.Model(&article).Preload("Comment.Replys").
-			// Preload("Comment.User",
-			// 	func(DB *gorm.DB) *gorm.DB {
-			// 		// 屏蔽密码
-			// 		return DB.Select("name", "uuid", "id", "email")
-			// 	}).
-			Preload("Comment").
-			First(&article).Error == nil {
-		// 找出user并整合
-		var result []map[string]interface{}
-		for _, item := range article.Comment {
-			user := model.User{}
-			container := make(map[string]interface{})
-			DB.Select("name", "uuid", "id", "email").Where("id=?", item.UserID).First(&user)
-			// 结构体转map
-			mapstructure.Decode(item, &container)
-			container["User"] = user
-			result = append(result, container)
-		}
-
+		DB.Where("article_id=?", article.ID).Find(&commons).Error == nil {
 		ctx.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusOK,
-			"result":  result,
+			"result":  tree(commons),
 			"message": "成功",
 		})
 
@@ -699,41 +702,31 @@ func Oauth(ctx *gin.Context) {
 	var clientSecret string
 	var Args string
 	var Url string
-	origin := ctx.Request.Host
+	// origin := ctx.Request.Referer()
+	// fmt.Println("域名", origin)
 	code := ctx.Query("code")
-	var redirect_uri string = "http://www.mrjiang.work/v1/oauth"
-	switch {
-	case strings.Contains(origin, "gitee"):
-		{
-			fmt.Println("gitee访问")
-			clientId = viper.GetString("GieeClientId")
-			clientSecret = viper.GetString("GieeClientSecret")
-			Url = "https://gitee.com/oauth/token"
-			Args = fmt.Sprintf("grant_type=authorization_code&code=%s&client_id=%s&redirect_uri=%s&client_secret=%s", code, clientId, redirect_uri, clientSecret)
-		}
-	case strings.Contains(origin, "github"):
-		{
-			fmt.Println("github访问")
-			clientId = viper.GetString("GithubClientId")
-			clientSecret = viper.GetString("GithubClientSecret")
-			Url = "https://github.com/oauth/token"
-			Args = fmt.Sprintf("grant_type=authorization_code&code=%s&client_id=%s&redirect_uri=%s&client_secret=%s", code, clientId, redirect_uri, clientSecret)
-		}
-	default:
-		{
-			ctx.Status(http.StatusServiceUnavailable) // 503
-			ctx.JSON(http.StatusServiceUnavailable, gin.H{
-				"code":    http.StatusServiceUnavailable,
-				"message": "错误的访问",
-			})
-			return
-		}
-	}
+	origin := ctx.Query("origin")
+	if origin == "github" {
+		fmt.Println("github访问")
+		var redirect_uri string = "http://www.mrjiang.work/v1/oauth?origin=github"
+		clientId = viper.GetString("GithubClientId")
+		clientSecret = viper.GetString("GithubClientSecret")
+		Url = "https://github.com/login/oauth/access_token?"
+		Args = fmt.Sprintf("code=%s&client_id=%s&client_secret=%s&redirect_uri=%s", code, clientId, clientSecret, redirect_uri)
 
+	} else {
+		fmt.Println("gitee访问")
+		var redirect_uri string = "http://www.mrjiang.work/v1/oauth?origin=gitee"
+		clientId = viper.GetString("GieeClientId")
+		clientSecret = viper.GetString("GieeClientSecret")
+		Url = "https://gitee.com/oauth/token"
+		Args = fmt.Sprintf("grant_type=authorization_code&code=%s&client_id=%s&redirect_uri=%s&client_secret=%s", code, clientId, redirect_uri, clientSecret)
+
+	}
 	response, err := http.Post(Url, "application/x-www-form-urlencoded", strings.NewReader(Args))
 	if err != nil || response.StatusCode != http.StatusOK {
 		ctx.Status(http.StatusServiceUnavailable) // 503
-		// fmt.Println("出错", response.StatusCode)
+		fmt.Println("错误代码", response.StatusCode)
 		return
 	}
 	defer response.Body.Close()
