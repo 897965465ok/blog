@@ -1,236 +1,89 @@
-# typescript
+# typescript 笔记
 
-TypeScript中的数据类型有：
+## 基础类型：
+``` typescript 
+    Boolean: 布尔类型;   let isDone: boolean = false;
+    Number: 数值类型;    let decLiteral: number = 6;
+    String : 字符串类型; let name: string = "bob";
+    Array: 数组类型;     let list: number[] = [1, 2, 3];    let list: Array<number> = [1, 2, 3];
+    Tuple: 元祖;        let array: [string, number] = ["我",1]
+    enum：枚举类型;      enum Color {Red, Green, Blue} let c: Color = Color.Green;
+    any : 任意类型;      
+    void：空类型函数没返回的时用;   let unusable: void = undefined|null;    
+    Undefined|Null: 可以把 null和undefined赋值任意类型的变量;
+    Never：永远不存在的类型 目前不了解 可能抛出错误是会用吧;
+   
+```
+## 接口约束
+``` typescript
+    interface SquareConfig {
 
-Undefined :
+    color?: string; // ？表示可以不传
 
-Number:数值类型;
+    readonly y: number; // 只读属性
 
-string : 字符串类型;
+    [propName: string]: any; // 表示这个对象可以动态添加属性
 
-Boolean: 布尔类型；
+    funName:(source: string, subString: string): boolean; //函数约束
 
-enum：枚举类型；
+    numberKey:[index: number]: string; // 可索引约束 但是数字索引的返回值必须是字符串索引返回值类型的子类型
+    stringKey:[string: number]: string; //  第二种
+}
 
-any : 任意类型，一个牛X的类型；
+// 类接口
+interface ClockInterface {
+    currentTime: Date;
+}
+// implements关键字
+class Clock implements ClockInterface {
+    currentTime: Date;
+    constructor(h: number, m: number) { }
+}
 
-void：空类型；
 
-Array : 数组类型;
+```
+# 需要记忆的东西
+``` typescript
+    ReadonlyArray<T>:只读数组类型;  
+    protected:   受保护的 当前类 和子类可以访问
+    private:     私有的
+    public:      公有
+    let a: number[] = [1, 2, 3, 4];
+    let ro: ReadonlyArray<number> = a;
+    ro[0] = 12; // error!
+    ro.push(5); // error!
+    ro.length = 100; // error!
+    a = ro; // error!
+    a = ro as number[]; // yes
+```
 
-Tuple : 元祖类型；
 
-Null ：空类型。
 
-public  公有
+# 函数
+``` typescript
 
-protected 受保护的 当前类 和子类可以访问
+// 重载
+function getInfo(name:String):String;
 
-private 私有的
+function getInfo(age:Number):number;
 
-// let flag:boolean = true;
+function getInfo(str:any ):any{ 
 
-// // var flag = 123; //错误
+    if(typeof str=='string'){
 
-// flag = false;
+        return str
 
-// console.log(flag)
+    }else{
 
-// let nub:Number = 12;
+        return  str
 
-// console.log(nub)
+    }
 
-// let age:Number = 10;
+}
 
-// console.log(age);
+```
 
-// let Name:String = `我不是GAY`;
 
-// console.log(Name)
-
-// let a:Boolean = true;
-
-// console.log(a)
-
-//枚举
-
-// enum REN{man='男',women='女人'}
-
-// console.log(REN.man)
-
-// 万能类型
-
-// let opop:any = 12
-
-//null类型
-
-// let obj:null=null;
-
-// console.log(obj)
-
-// function search(age:Number):String{
-
-//     return `找到了${age}小姐姐`
-
-// }
-
-// let arr:String = search(19);
-
-// console.log(arr)
-
-// function search(age:Number,stature:String):String{
-
-//   let yy:String = ''
-
-//   yy = `找到了${age}`
-
-//   if(stature != undefined){
-
-//       yy = `${yy} ${stature}`
-
-//   }
-
-//   return yy
-
-// }
-
-// let result:String = search(18,'36d');
-
-// console.log(result)
-
-// function search (age:Number, ...stature:Number[]):String{
-
-//     return ''
-
-// }
-
-// var add = (n1:number,n2:number):number=>{
-
-//     return n1+n2
-
-// }
-
-// console.log(add(1,4))
-
-// var yangzi = '刘德华'
-
-// function zhengXing():void{
-
-//     console.log('技术胖整形成了'+yangzi+'的样子')
-
-// }
-
-// zhengXing()
-
-// console.log(yangzi)
-
-// let bb = 30;
-
-// function add ():Number{
-
-//  var bb = 10;
-
-//  return 0
-
-// }
-
-// console.log(bb)
-
-// var y:string = '刘德华'
-
-// function zhengXing():void{
-
-//     var y:string = '马德华'
-
-//     console.log('技术胖整形成了'+y+'的样子')
-
-// }
-
-// zhengXing()
-
-// console.log(y)
-
-// var yangzi:string = '刘德华'
-
-// function zhengXing():void{
-
-//     console.log('技术胖整形成了'+yangzi+'的样子')
-
-//     var yangzi:string = '马德华'
-
-//     console.log('技术胖整形成了'+yangzi+'的样子')
-
-// }
-
-// zhengXing()
-
-// console.log(yangzi)
-
-// function zhengXing():void{
-
-//     var yangzi:String = '刘德华'
-
-//     console.log(yangzi)
-
-// }
-
-// zhengXing()
-
-// 可选参数 必须配置到最后一个型参
-
-//   function ooxx (age:number,name?:string):void{
-
-//    console.log(age,name)
-
-//   }
-
-//   ooxx(18,'小明')
-
-//   ooxx(18)
-
-// 数组定义
-
-// let arr = []
-
-// let arr:number[] = [] //第一种
-
-//第二种
-
-// let arr:Array = [11,22,33]
-
-//元祖类型
-
-// let arr:[number,string]=[1,'2']
-
-// let a:number|undefined
-
-// a = 1
-
-// never类型表示只能是undeined或null
-
-// let a:undefined
-
-// let b:null
-
-//重载
-
-// function getInfo(name:String):String;
-
-// function getInfo(age:Number):number;
-
-// function getInfo(str:any ):any{
-
-//     if(typeof str=='string'){
-
-//         return str
-
-//     }else{
-
-//         return  str
-
-//     }
-
-// }
 
 // console.log(getInfo('18'))
 

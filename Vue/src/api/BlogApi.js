@@ -55,7 +55,8 @@ export const wallhaven = async params => {
     try {
         let { data } = await api.get("v1/wallhaven", {
             params: {
-                q: params.q
+                limit: 216,
+                offset: 1
             }
         });
         return data.result;

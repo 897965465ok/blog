@@ -22,14 +22,6 @@ type Favorites struct {
 	Link string `grom:"type:varchar(300); not null;"  json:"link"`
 }
 
-type Banner struct {
-	gorm.Model
-	Name        string `grom:"type:varchar(40); not null;"  json:"name"`
-	UUID        string `gorm:"type:varchar(50); not null;" json:"uuid"`
-	Picture     string `gorm:"type:varchar(200);" json:"picture"`
-	ArticlePath string `gorm:"type:varchar(255);"  json:"article_path" `
-}
-
 // 算个用户吧
 type User struct {
 	gorm.Model
@@ -86,7 +78,6 @@ type Article struct {
 	Like int `gorm:" DEFAULT 0 " json:"like"`
 	Hot  int `gorm:" DEFAULT 0 " json:"hot"`
 	REC  int `gorm:" DEFAULT 0 " json:"rec"`
-
 	// 评论数
 	CommentsCount int64
 	// 文章内容现在未
@@ -98,7 +89,7 @@ type ImgUrl struct {
 	Dimension_x int64  `json:"dimension_x"`
 	Dimension_y int64  `json:"dimension_y"`
 	File_size   int64  `json:"file_size"`
-	UUID        string `gorm:"type:varchar(50);" json:"id"`
+	UUID        string `gorm:"type:varchar(50);" json:"uuid"`
 	Url         string `gorm:"type:varchar(255);" json:"url"`
 	Short_url   string `gorm:"type:varchar(255);" json:"short_url"`
 	Category    string `gorm:"type:varchar(50);" json:"category"`
@@ -107,6 +98,17 @@ type ImgUrl struct {
 	Large       string `gorm:"type:varchar(255);" json:"large"`
 	Original    string `gorm:"type:varchar(255);" json:"original"`
 	Small       string `gorm:"type:varchar(255);" json:"small"`
+}
+type Banner struct {
+	gorm.Model
+	UUID      string `gorm:"type:varchar(50);" json:"id"`
+	Url       string `gorm:"type:varchar(255);" json:"url"`
+	Short_url string `gorm:"type:varchar(255);" json:"short_url"`
+	Path      string `gorm:"type:varchar(255);" json:"path"`
+	Large     string `gorm:"type:varchar(255);" json:"large"`
+	Original  string `gorm:"type:varchar(255);" json:"original"`
+	Small     string `gorm:"type:varchar(255);" json:"small"`
+	ImgUrlID  string `gorm:"type:varchar(50);" json:"imgUrl"`
 }
 
 type Args []string
@@ -127,6 +129,10 @@ func (str Args) Value() (driver.Value, error) {
 func (str *Args) Scan(value interface{}) error {
 	bytes, _ := value.([]byte)
 	*str = strings.Split(string(bytes), ",")
+	return nil
+}
+func (Banner *Banner) BeforeCreate(tx *gorm.DB) error {
+	Banner.UUID = uuid.NewV4().String()
 	return nil
 }
 

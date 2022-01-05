@@ -87,5 +87,11 @@ func CollectRouter(r *gin.Engine) *gin.Engine {
 		V1.GET("/oauth", controller.Oauth)
 
 	}
+	Admin := r.Group("admin")
+	{
+		Admin.GET("/wallhaven", controller.Wallhaven)
+		Admin.POST("/getbanner", controller.GetBanner)
+		Admin.POST("/appendbanner", controller.AppendBanner)
+	}
 	return r
 }

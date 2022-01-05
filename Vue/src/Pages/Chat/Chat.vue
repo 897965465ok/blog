@@ -1,20 +1,12 @@
 <template>
   <el-row class="chat">
     <el-row class="header">
-      <header class="title">
-        聊天室
-      </header>
+      <header class="title">聊天室</header>
     </el-row>
     <el-row>
       <section class="content">
-        <div
-          class="user-wrapper"
-          v-for="(item, index) in messageGroup"
-          :key="index"
-        >
-          <div class="time">
-            {{ new Date() }}
-          </div>
+        <div class="user-wrapper" v-for="(item, index) in messageGroup" :key="index">
+          <div class="time">{{ new Date() }}</div>
           <div class="user-info">
             <div class="user-picture">
               <img class="el-image" src="../../assets/jerry.png" />
@@ -32,7 +24,7 @@
           <span class="iconfont icon-shijian"></span>
           <span class="iconfont icon-shijian"></span>
         </div>
-        <textarea v-model="content" class="input-Content"> </textarea>
+        <textarea v-model="content" class="input-Content"></textarea>
         <div class="button-wrapper">
           <button @click="SocketInit">链接</button>
           <button>关闭</button>
@@ -63,9 +55,9 @@ export default {
       this.content = "";
     },
     getMessage(event) {
-        console.log(event)
-        this.messageGroup.push(event.data);
-      
+      console.log(event)
+      this.messageGroup.push(event.data);
+
     }
   }
 };

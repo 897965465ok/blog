@@ -2,6 +2,7 @@ package common
 
 import (
 	"fmt"
+	model "main/Model"
 
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
@@ -35,6 +36,29 @@ func GetDB() *gorm.DB {
 		panic("errr" + err.Error())
 	}
 	sqlDB, err := DB.DB()
+	func() {
+		if !DB.Migrator().HasTable(&model.Tags{}) {
+			DB.AutoMigrate(&model.Tags{})
+		}
+		if !DB.Migrator().HasTable(&model.Favorites{}) {
+			DB.AutoMigrate(&model.Favorites{})
+		}
+		if !DB.Migrator().HasTable(&model.User{}) {
+			DB.AutoMigrate(&model.User{})
+		}
+		if !DB.Migrator().HasTable(&model.Comment{}) {
+			DB.AutoMigrate(&model.Comment{})
+		}
+		if !DB.Migrator().HasTable(&model.Article{}) {
+			DB.AutoMigrate(&model.Article{})
+		}
+		if !DB.Migrator().HasTable(&model.ImgUrl{}) {
+			DB.AutoMigrate(&model.ImgUrl{})
+		}
+		if !DB.Migrator().HasTable(&model.Banner{}) {
+			DB.AutoMigrate(&model.Banner{})
+		}
+	}()
 	// SetMaxIdleConns 用于设置连接池中空闲连接的最大数量。
 	sqlDB.SetMaxIdleConns(10)
 	// SetMaxOpenConns 设置打开数据库连接的最大数量。
