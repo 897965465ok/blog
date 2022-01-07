@@ -1,7 +1,8 @@
 import axios, { AxiosRequestHeaders, AxiosRequestConfig } from 'axios'
 const api = axios.create({
-    timeout: 10000, // 设置统一的超时时长
+    // timeout: 10000, // 设置统一的超时时长
 })
+
 
 // api.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 api.interceptors.response.use((config) => {

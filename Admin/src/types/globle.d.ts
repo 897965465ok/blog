@@ -23,6 +23,7 @@ declare interface dataType {
     banner: pictureType[],
     saveList: pictureType[]
     pictures: number
+    loading: boolean
 }
 
 declare interface wallhaven {
@@ -30,10 +31,7 @@ declare interface wallhaven {
     offset: number
 }
 declare interface appendBanner {
-    (bannerIds: string[]): Promise<{
-        code: number,
-        message: string
-    }>
+    (bannerIds: string[]):any
 }
 
 declare interface getBanner {
@@ -43,3 +41,8 @@ declare interface getBanner {
         result: any
     }>
 }
+
+declare interface deleteBanner {
+   (string: string): any
+}
+

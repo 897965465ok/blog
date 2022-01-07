@@ -92,6 +92,7 @@ func CollectRouter(r *gin.Engine) *gin.Engine {
 		Admin.GET("/wallhaven", controller.Wallhaven)
 		Admin.POST("/getbanner", controller.GetBanner)
 		Admin.POST("/appendbanner", controller.AppendBanner)
+		Admin.POST("/deletebanner", controller.DeleteBanner)
 	}
 	return r
 }

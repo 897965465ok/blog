@@ -7,7 +7,16 @@ export const router: Router = createRouter({
         children: [{
             path: '/banner',
             component: () => import("../pages/banner/banner.vue")
-        }]
+        },
+        {
+            path: '/article',
+            component: () => import("../pages/article/article")
+        },
+        // {
+        //     path: '/tags',
+        //     component: () => import("../pages/tags/tags")
+        // }
+        ]
     }]
 })
 

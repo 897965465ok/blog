@@ -47,7 +47,7 @@ let { MenuList } = reactive({
         {
             iconName: "Setting",
             text: "文章管理",
-            path: "/articles"
+            path: "/article"
         }
     ]
 })

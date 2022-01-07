@@ -125,13 +125,14 @@ func GetBanner(ctx *gin.Context) {
 func AppendBanner(ctx *gin.Context) {
 	DB := common.GetDB()
 	banner := []model.Banner{}
-	for _, uuId := range ctx.PostForm("bannerIds") {
-		DB.Raw(`SELECT 
-		small,url,short_url,path,original,large,uuid as img_url_id 
-		FROM img_url 
-		WHERE uuid = ?`, uuId).
-			Scan(&banner)
-	}
+	temp := model.Banner{}
+	jsonparser.ArrayEach([]byte(ctx.PostForm("bannerIds")), func(uuid []byte, dataType jsonparser.ValueType, offset int, err error) {
+		DB.Raw(`SELECT
+		small,url,short_url,path,original,large,uuid as img_id
+		FROM img_url
+		WHERE uuid = ?`, string(uuid)).Scan(&temp)
+		banner = append(banner, temp)
+	})
 	// 忽略字段
 	if DB.Omit("id").Create(&banner).Error == nil {
 		ctx.JSON(http.StatusOK, gin.H{
@@ -148,11 +149,20 @@ func AppendBanner(ctx *gin.Context) {
 
 // 删除轮播图
 func DeleteBanner(ctx *gin.Context) {
-
-}
-
-//  添加轮播图
-func AddBanner(ctx *gin.Context) {
+	DB := common.GetDB()
+	id := ctx.Query("id")
+	SQL := fmt.Sprintf(`DELETE FROM banner WHERE id=%s LIMIT 1`, id)
+	if DB.Exec(SQL).Error == nil {
+		ctx.JSON(http.StatusOK, gin.H{
+			"code":    200,
+			"message": "成功",
+		})
+	} else {
+		ctx.JSON(http.StatusOK, gin.H{
+			"code":    401,
+			"message": "失败",
+		})
+	}
 
 }
 

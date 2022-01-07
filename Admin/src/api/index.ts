@@ -10,7 +10,7 @@ interface T {
 export const getBanner = async () => {
      let response = await api.post<T>("admin/getbanner")
      console.log(response)
-     return {result: response.data.result, message:response.data.message }
+     return { result: response.data.result, message: response.data.message }
 }
 
 export const wallhaven = async (params: wallhaven) => {
@@ -29,6 +29,24 @@ export const appendBanner: appendBanner = async (bannerIds) => {
           }
      });
 };
+
+export const deleteBanner = async (ID: string) => {
+     let { data } = await api.post<
+          Promise<{
+               code: number,
+               message: string
+          }>
+     >("admin/deletebanner", null, {
+          params: {
+               id: ID
+          }
+     });
+     return data
+}
+
+export const getArticles =  async () =>{
+     return  await await api.get("/v1/articles");
+}
 
 // export const getOauthInfo = async userInfo => {
 //      let url;

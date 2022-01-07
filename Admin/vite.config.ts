@@ -9,10 +9,15 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/admin/, '/admin')
       },
+      '/v1': {
+        target: 'http://localhost:3800',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/v1/, '/v1')
+      },
     }
   },
   plugins: [
     vue(),
-    vueJsx()
+    vueJsx({})
   ]
 })
