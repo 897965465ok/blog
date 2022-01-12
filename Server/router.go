@@ -25,13 +25,14 @@ func createRender() multitemplate.Renderer {
 
 func CollectRouter(r *gin.Engine) *gin.Engine {
 	r.Use(middleware.Cors())
+	r.Use(middleware.LogerMiddleware())
 	r.Static("/static", "./view/static")
 	r.Static("/v1/markdown", "./markdown")
 	// r.LoadHTMLFiles("./view/index.tmpl")
 	// 更换成自己的模板
 	r.HTMLRender = createRender()
 	r.GET("/", controller.Index)
-	r.GET("/ws", controller.WsCnection)
+	// r.GET("/ws", controller.WsCnection)
 	r.NoRoute(controller.Index)
 	V1 := r.Group("v1")
 	{

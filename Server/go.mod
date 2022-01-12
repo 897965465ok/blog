@@ -20,13 +20,17 @@ require (
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0 // indirect
 	github.com/jonboulle/clockwork v0.1.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
+	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
+	github.com/lestrrat-go/strftime v1.0.5 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mitchellh/mapstructure v1.4.2
 	github.com/panjf2000/ants v1.2.1 // indirect
 	github.com/panjf2000/ants/v2 v2.4.6
 	github.com/pelletier/go-toml v1.9.4 // indirect
 	github.com/prometheus/client_golang v0.9.3 // indirect
+	github.com/rifflock/lfshook v0.0.0-20180920164130-b9218ef580f5
 	github.com/satori/go.uuid v1.2.0
+	github.com/sirupsen/logrus v1.2.0
 	github.com/smartwalle/alipay/v3 v3.1.6
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/soheilhy/cmux v0.1.4 // indirect
