@@ -4,13 +4,16 @@ import qs from "qs"
 interface T {
      result: object[],
      code: number,
-     message: string
+     message: string,
+     count:number
 }
 
-export const getBanner = async () => {
-     let response = await api.post<T>("admin/getbanner")
+export const getBanner = async (params:paging) => {
+     let response = await api.post<T>("admin/getbanner",null,{
+          params
+     })
      console.log(response)
-     return { result: response.data.result, message: response.data.message }
+     return { result: response.data.result, message: response.data.message,count: response.data.count }
 }
 
 export const wallhaven = async (params: wallhaven) => {
@@ -44,8 +47,10 @@ export const deleteBanner = async (ID: string) => {
      return data
 }
 
-export const getArticles =  async () =>{
-     return  await await api.get("/v1/articles");
+export const getArticles = async (params:paging) => {
+     return await await api.get("/v1/articles", {
+          params
+     });
 }
 
 // export const getOauthInfo = async userInfo => {

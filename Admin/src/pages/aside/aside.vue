@@ -4,8 +4,8 @@
             <el-col class="h-full">
                 <el-menu class="h-full" default-active="1">
                     <el-menu-item
-                        :index="index"
-                        v-for="(item,index) in MenuList"
+                        :index="item.path"
+                        v-for="item in MenuList"
                         :key="item.path"
                         @click="jump(item.path)"
                     >
@@ -23,7 +23,6 @@
 import { reactive } from 'vue';
 import { useRouter, useRoute } from "vue-router"
 const router = useRouter()
-const route = useRoute()
 const jump = (path: string) => {
     router.push(path)
 }
@@ -36,17 +35,17 @@ let { MenuList } = reactive({
         },
         {
             iconName: "PictureFilled",
-            text: "轮播图管理",
+            text: "轮播图",
             path: "/banner"
         },
         {
             iconName: "PriceTag",
-            text: "标签管理",
-            path: "/tags"
+            text: "用户",
+            path: "/user"
         },
         {
             iconName: "Setting",
-            text: "文章管理",
+            text: "文章",
             path: "/article"
         }
     ]

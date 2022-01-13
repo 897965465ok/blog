@@ -10,12 +10,12 @@ export const router: Router = createRouter({
         },
         {
             path: '/article',
-            component: () => import("../pages/article/article")
+            component: () => import("../pages/article/article.vue")
         },
-        // {
-        //     path: '/tags',
-        //     component: () => import("../pages/tags/tags")
-        // }
+        {
+            path: '/user',
+            component: () => import("../pages/user/user.vue")
+        }
         ]
     }]
 })

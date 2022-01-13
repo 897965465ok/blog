@@ -3,7 +3,6 @@ export const store = createStore({
     state() {
         return {
 
-
         }
     },
     mutations: {

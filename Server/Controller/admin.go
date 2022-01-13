@@ -105,18 +105,24 @@ func Wallhaven_V2(ctx *gin.Context) {
 // 获取轮播图
 func GetBanner(ctx *gin.Context) {
 	DB := common.GetDB()
+	var count int64
 	banner := []model.Banner{}
-	if DB.Find(&banner).Error == nil {
+	limit, _ := strconv.Atoi(ctx.Query("limit"))
+	offset, _ := strconv.Atoi(ctx.Query("offset"))
+	DB.Model(&model.Banner{}).Count(&count)
+	if DB.Limit(limit).Offset(limit*offset).Find(&banner).Error == nil {
 		ctx.JSON(http.StatusOK, gin.H{
 			"code":    200,
 			"message": "成功",
 			"result":  banner,
+			"count":   count,
 		})
 	} else {
 		ctx.JSON(http.StatusOK, gin.H{
-			"code":    200,
+			"code":    400,
 			"message": "失败",
 			"result":  banner,
+			"count":   count,
 		})
 	}
 }
@@ -167,7 +173,6 @@ func DeleteBanner(ctx *gin.Context) {
 }
 
 // 访问Wallhaven
-// 访问Wallhaven
 func Wallhaven(ctx *gin.Context) {
 	var count int64
 	DB := common.GetDB()
@@ -175,7 +180,6 @@ func Wallhaven(ctx *gin.Context) {
 	DB.Model(&model.ImgUrl{}).Count(&count)
 	limit, _ := strconv.Atoi(ctx.Query("limit"))
 	offset, _ := strconv.Atoi(ctx.Query("offset"))
-	fmt.Println(limit * offset)
 	err := DB.Select([]string{"small", "original", "large", "uuid", "id"}).Limit(limit).Offset(limit * offset).Find(Img).Error
 	if err != nil {
 		ctx.JSON(http.StatusOK, gin.H{

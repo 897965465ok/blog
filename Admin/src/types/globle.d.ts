@@ -23,7 +23,9 @@ declare interface dataType {
     banner: pictureType[],
     saveList: pictureType[]
     pictures: number
-    loading: boolean
+    loading: boolean,
+    count:number,
+    tableLoading:boolean
 }
 
 declare interface wallhaven {
@@ -31,7 +33,7 @@ declare interface wallhaven {
     offset: number
 }
 declare interface appendBanner {
-    (bannerIds: string[]):any
+    (bannerIds: string[]): any
 }
 
 declare interface getBanner {
@@ -43,6 +45,11 @@ declare interface getBanner {
 }
 
 declare interface deleteBanner {
-   (string: string): any
+    (string: string): any
 }
 
+declare interface paging {
+    limit: number,
+    offset: number
+
+}

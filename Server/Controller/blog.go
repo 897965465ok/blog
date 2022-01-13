@@ -181,10 +181,15 @@ func CreateArticle(ctx *gin.Context) {
 func QueryAllArticle(ctx *gin.Context) {
 	DB := common.GetDB()
 	result := &[]model.Article{}
-	DB.Find(result)
+	limit, _ := strconv.Atoi(ctx.Query("limit"))
+	offset, _ := strconv.Atoi(ctx.Query("offset"))
+	var count int64
+	DB.Model(&model.Article{}).Count(&count)
+	DB.Limit(limit).Offset(offset * limit).Find(result)
 	ctx.JSON(http.StatusOK, gin.H{
 		"code":   200,
 		"result": result,
+		"count":  count,
 	})
 }
 
