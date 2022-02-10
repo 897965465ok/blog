@@ -5,7 +5,6 @@ import (
 	middleware "main/Middleware"
 
 	"github.com/gin-contrib/multitemplate"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -41,7 +40,6 @@ func CollectRouter(r *gin.Engine) *gin.Engine {
 		V1.POST("/tag", controller.CreateTag)
 		// 查找全部标签
 		V1.GET("/tags", controller.QueryAllTag)
-
 		// 查询所有文章
 		V1.GET("/articles", controller.QueryAllArticle)
 		// 查询一个文章
@@ -70,6 +68,7 @@ func CollectRouter(r *gin.Engine) *gin.Engine {
 		V1.GET("/watchnumber", controller.WatchNumber)
 		V1.GET("/like", controller.Like)
 		V1.POST("/comment", middleware.AuthMiddleware(), controller.Comment)
+
 		/*以下都是测试接口 */
 		// 人家服务器接口已废除
 		V1.GET("/returnjson", controller.ReturnJson)
@@ -94,6 +93,7 @@ func CollectRouter(r *gin.Engine) *gin.Engine {
 		Admin.POST("/getbanner", controller.GetBanner)
 		Admin.POST("/appendbanner", controller.AppendBanner)
 		Admin.POST("/deletebanner", controller.DeleteBanner)
+		Admin.POST("/queryuser", controller.QueryUser)
 	}
 	return r
 }

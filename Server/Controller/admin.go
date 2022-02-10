@@ -3,7 +3,7 @@ package controller
 import (
 	"fmt"
 	"io/ioutil"
-	common "main/Common"
+	global "main/Global"
 	model "main/Model"
 	util "main/Util"
 	"net/http"
@@ -24,14 +24,13 @@ func MarkdownToHmtl(ctx *gin.Context) {
 	util.Success(ctx, nil, "成功")
 }
 
+// 这段可以直接循环 失误了
 func Wallhaven_V2(ctx *gin.Context) {
 	var wg sync.WaitGroup
 	// defer ants.Release()
 	pool, _ := ants.NewPoolWithFunc(10, func(i interface{}) {
 		wg.Done()
-		DB := common.GetDB()
-		sqlDB, _ := DB.DB()
-		defer sqlDB.Close()
+		DB := global.DB
 		i, _ = i.(int64)
 		Url := fmt.Sprintf("https://wallhaven.cc/api/v1/search?q=%s&page=%d", "anime", i)
 		response, err := http.Get(Url)
@@ -104,7 +103,7 @@ func Wallhaven_V2(ctx *gin.Context) {
 
 // 获取轮播图
 func GetBanner(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := global.DB
 	var count int64
 	banner := []model.Banner{}
 	limit, _ := strconv.Atoi(ctx.Query("limit"))
@@ -129,7 +128,7 @@ func GetBanner(ctx *gin.Context) {
 
 // 添加轮播图
 func AppendBanner(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := global.DB
 	banner := []model.Banner{}
 	temp := model.Banner{}
 	jsonparser.ArrayEach([]byte(ctx.PostForm("bannerIds")), func(uuid []byte, dataType jsonparser.ValueType, offset int, err error) {
@@ -155,7 +154,7 @@ func AppendBanner(ctx *gin.Context) {
 
 // 删除轮播图
 func DeleteBanner(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := global.DB
 	id := ctx.Query("id")
 	SQL := fmt.Sprintf(`DELETE FROM banner WHERE id=%s LIMIT 1`, id)
 	if DB.Exec(SQL).Error == nil {
@@ -175,7 +174,7 @@ func DeleteBanner(ctx *gin.Context) {
 // 访问Wallhaven
 func Wallhaven(ctx *gin.Context) {
 	var count int64
-	DB := common.GetDB()
+	DB := global.DB
 	Img := &[]model.ImgUrl{}
 	DB.Model(&model.ImgUrl{}).Count(&count)
 	limit, _ := strconv.Atoi(ctx.Query("limit"))
@@ -193,5 +192,20 @@ func Wallhaven(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"code":   http.StatusOK,
 		"result": container,
+	})
+}
+
+func QueryUser(ctx *gin.Context) {
+	DB := global.DB
+	result := &[]model.User{}
+	limit, _ := strconv.Atoi(ctx.Query("limit"))
+	offset, _ := strconv.Atoi(ctx.Query("offset"))
+	offset = limit * offset
+	// DB.Limit(limit).Offset(offset * limit).Find(result)
+	sql := fmt.Sprintf(`select uuid,name,email from user limit %d,%d`, offset, limit)
+	DB.Raw(sql).Scan(result)
+	ctx.JSON(http.StatusOK, gin.H{
+		"code":   200,
+		"result": result,
 	})
 }

@@ -46,7 +46,6 @@ func ReadLoop(c *Child) {
 				fmt.Println(c.Hub.Children)
 			}
 		}
-
 	}()
 	var (
 		message []byte
@@ -87,6 +86,7 @@ func WsCnection(ctx *gin.Context) {
 		conn *websocket.Conn
 		err  error
 	)
+
 	go func() {
 		for {
 			select {
@@ -105,10 +105,12 @@ func WsCnection(ctx *gin.Context) {
 		}
 
 	}()
+
 	// 升级为ws协议
 	if conn, err = upGrader.Upgrade(ctx.Writer, ctx.Request, nil); err != nil {
 		return
 	}
+
 	c := &Child{
 		Hub:        hub,
 		Conn:       conn,

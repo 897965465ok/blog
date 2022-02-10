@@ -4,18 +4,23 @@ export const router: Router = createRouter({
     routes: [{
         path: '/',
         component: () => import("../pages/main/main.vue"),
-        children: [{
-            path: '/banner',
-            component: () => import("../pages/banner/banner.vue")
-        },
-        {
-            path: '/article',
-            component: () => import("../pages/article/article.vue")
-        },
-        {
-            path: '/user',
-            component: () => import("../pages/user/user.vue")
-        }
+        children: [
+            {
+                path: '/',
+                component: () => import("../pages/home/home.vue")
+            },
+            {
+                path: '/banner',
+                component: () => import("../pages/banner/banner.vue")
+            },
+            {
+                path: '/article',
+                component: () => import("../pages/article/article.vue")
+            },
+            {
+                path: '/user',
+                component: () => import("../pages/user/user.vue")
+            }
         ]
     }]
 })

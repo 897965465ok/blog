@@ -3,6 +3,8 @@ package common
 import (
 	"fmt"
 	model "main/Model"
+	"os"
+	"time"
 
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
@@ -10,7 +12,18 @@ import (
 	"gorm.io/gorm/schema"
 )
 
-func GetDB() *gorm.DB {
+func InitConfig() {
+	workDir, _ := os.Getwd()
+	viper.SetConfigName("config")
+	viper.SetConfigType("yml")
+	viper.AddConfigPath(workDir + "/Config")
+	err := viper.ReadInConfig()
+	if err != nil {
+		panic(err)
+	}
+}
+
+func InitDB() *gorm.DB {
 	host := viper.GetString("datasource.host")           // 公网ip
 	port := viper.GetString("datasource.port")           // 数据库端口
 	database := viper.GetString("datasource.database")   // 库
@@ -25,6 +38,7 @@ func GetDB() *gorm.DB {
 		database,
 		charset,
 	)
+
 	DB, err := gorm.Open(mysql.Open(args),
 		&gorm.Config{
 			NamingStrategy: schema.NamingStrategy{
@@ -35,7 +49,7 @@ func GetDB() *gorm.DB {
 	if err != nil {
 		panic("errr" + err.Error())
 	}
-	sqlDB, err := DB.DB()
+	sqlDB, _ := DB.DB()
 	func() {
 		if !DB.Migrator().HasTable(&model.Tags{}) {
 			DB.AutoMigrate(&model.Tags{})
@@ -62,6 +76,8 @@ func GetDB() *gorm.DB {
 	// SetMaxIdleConns 用于设置连接池中空闲连接的最大数量。
 	sqlDB.SetMaxIdleConns(10)
 	// SetMaxOpenConns 设置打开数据库连接的最大数量。
-	sqlDB.SetMaxOpenConns(50)
+	sqlDB.SetMaxOpenConns(256)
+	// 设置时间吧。
+	sqlDB.SetConnMaxLifetime(time.Minute * 5)
 	return DB
 }

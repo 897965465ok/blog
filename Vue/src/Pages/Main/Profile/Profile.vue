@@ -11,7 +11,7 @@
         <li v-for="(item, index) in icon" :key="index">
           <a :href="item.link">
             <i class="iconfont" :class="item.icon"></i>
-            <p >{{ item.title }}</p>
+            <p>{{ item.title }}</p>
           </a>
         </li>
       </ul>

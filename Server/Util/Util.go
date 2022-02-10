@@ -3,7 +3,7 @@ package util
 import (
 	"fmt"
 	"io/ioutil"
-	common "main/Common"
+	global "main/Global"
 	model "main/Model"
 	"math/rand"
 	"net/http"
@@ -78,9 +78,7 @@ func GetUserId(tokenString string) (uint, bool) {
 	}
 }
 func HasUserName(userName string) bool {
-	DB := common.GetDB()
-	sqlDB, _ := DB.DB()
-	defer sqlDB.Close()
+	DB := global.DB
 	user := &model.User{}
 	// 如果没有记录就等于0
 	if DB.Where("name = ?", userName).First(user).RowsAffected == 0 {
@@ -121,9 +119,7 @@ func VerifyEmailFormat(email string) bool {
 // 判断邮箱是否存在
 func HasUserEmail(email string) bool {
 	verify := VerifyEmailFormat(email)
-	DB := common.GetDB()
-	sqlDB, _ := DB.DB()
-	defer sqlDB.Close()
+	DB := global.DB
 	user := &model.User{}
 	// 如果没有记录就等于0
 	if verify && (DB.Where("email = ?", email).First(user).RowsAffected == 0) {
@@ -137,7 +133,6 @@ func HasUserEmail(email string) bool {
 func SendEamil(mailTo []string, subject string, body string) error {
 
 	//定义邮箱服务器连接信息，如果是网易邮箱 pass填密码，qq邮箱填授权码
-
 	mailConn := map[string]string{
 		"user": "897965465@qq.com",
 		"pass": viper.GetString("pas"),
@@ -146,9 +141,7 @@ func SendEamil(mailTo []string, subject string, body string) error {
 	}
 
 	port, _ := strconv.Atoi(mailConn["port"]) //转换端口类型为int
-
 	message := gomail.NewMessage()
-
 	message.SetHeader("From", message.FormatAddress(mailConn["user"], "Jiang"))
 
 	message.SetHeader("To", mailTo...)    //发送给多个用户
@@ -156,7 +149,6 @@ func SendEamil(mailTo []string, subject string, body string) error {
 	message.SetBody("text/html", body)    //设置邮件正文
 
 	d := gomail.NewDialer(mailConn["host"], port, mailConn["user"], mailConn["pass"])
-
 	err := d.DialAndSend(message)
 	return err
 
@@ -183,10 +175,7 @@ func Fail(ctx *gin.Context, data gin.H, message string) {
 
 //读取文件列表
 func ReadFile(dirPath, dirName string) {
-	DB := common.GetDB()
-	sqlDB, _ := DB.DB()
-	defer sqlDB.Close()
-	DB.AutoMigrate(&model.Article{})
+	DB := global.DB
 	dirArr, err := ioutil.ReadDir(dirPath)
 	ErrorHandling(err)
 	for _, item := range dirArr {
@@ -214,10 +203,7 @@ func ReadFile(dirPath, dirName string) {
 
 // 读取文件夹列表
 func ReadDir(dirPath string) {
-	DB := common.GetDB()
-	sqlDB, _ := DB.DB()
-	defer sqlDB.Close()
-	DB.AutoMigrate(&model.Tags{})
+	DB := global.DB
 	dirArr, err := ioutil.ReadDir(dirPath)
 	ErrorHandling(err)
 	for _, item := range dirArr {

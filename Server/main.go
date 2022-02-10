@@ -1,7 +1,8 @@
 package main
 
 import (
-	"os"
+	common "main/Common"
+	global "main/Global"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -9,19 +10,9 @@ import (
 )
 
 func main() {
-	InitConfig()
+	common.InitConfig()
+	global.DB = common.InitDB()
 	r := gin.Default()
 	r = CollectRouter(r)
 	r.Run(viper.GetString("server.host"))
-}
-
-func InitConfig() {
-	workDir, _ := os.Getwd()
-	viper.SetConfigName("config")
-	viper.SetConfigType("yml")
-	viper.AddConfigPath(workDir + "/Config")
-	err := viper.ReadInConfig()
-	if err != nil {
-		panic(err)
-	}
 }

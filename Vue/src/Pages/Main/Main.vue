@@ -3,18 +3,10 @@
     <el-row class="main-content">
       <el-col class="content-left" :span="16">
         <el-row class="card-wrapper">
-          <Articler
-            v-for="item in articles.slice(0, 4)"
-            :key="item.uuid"
-            :article="item"
-          ></Articler>
+          <Articler v-for="item in articles.slice(0, 4)" :key="item.uuid" :article="item"></Articler>
 
           <Carousel></Carousel>
-          <Articler
-            v-for="item in articles.slice(4, 9)"
-            :key="item.uuid"
-            :article="item"
-          ></Articler>
+          <Articler v-for="item in articles.slice(4, 9)" :key="item.uuid" :article="item"></Articler>
         </el-row>
       </el-col>
       <el-col class="content-right" :span="8">
@@ -24,11 +16,7 @@
           </el-col>
         </el-row>
 
-        <ReArticle
-          v-for="item in articles.slice(9, 16)"
-          :key="item.uuid"
-          :article="item"
-        ></ReArticle>
+        <ReArticle v-for="item in articles.slice(9, 16)" :key="item.uuid" :article="item"></ReArticle>
 
         <el-row>
           <el-image
@@ -40,14 +28,8 @@
 
         <el-row class="favorites-link">
           <waterfall :col="3" :data="favorites" :gutterWidth="10">
-            <div
-              class="favorites-item"
-              v-for="(item, index) in favorites"
-              :key="index"
-            >
-              <el-button @click.native="$skip(item.link)">
-                {{ item.userName }}
-              </el-button>
+            <div class="favorites-item" v-for="(item, index) in favorites" :key="index">
+              <el-button @click.native="$skip(item.link)">{{ item.userName }}</el-button>
             </div>
           </waterfall>
         </el-row>
@@ -59,6 +41,7 @@
 import Carousel from "./Carousel/Carousel";
 import Profile from "./Profile/Profile";
 import { mapState, mapActions } from "vuex";
+import * as api from "../../api/BlogApi"
 import Vue from "vue";
 let loading;
 // (() => {
@@ -72,6 +55,7 @@ let loading;
 //     }
 //   };
 // })()();
+
 export default {
   data() {
     return {
@@ -99,8 +83,10 @@ export default {
   async created() {
     // await this.getPictures(await this.$GetUrl());
     // console.log(this.$store.state.pictures.length )
-    if (this.$store.state.pictures.length <=1) {
-      await this.wallhaven(await this.$wallhaven({ q: "anime" }));
+    if (this.$store.state.pictures.length <= 1) {
+      let pictures = await api.wallhaven()
+      console.log(pictures)
+      await this.wallhaven(pictures.imgs);
     }
     await this.setRecommen({
       tags: (await this.$api.get("v1/tags")).data.result,

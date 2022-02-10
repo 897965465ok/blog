@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
-	common "main/Common"
+	global "main/Global"
 	model "main/Model"
 	util "main/Util"
 	"net/http"
@@ -66,7 +66,7 @@ func Index(Ginctx *gin.Context) {
 
 // 注册
 func Register(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := global.DB
 	user := &model.User{}
 	userName := ctx.PostForm("userName")
 	password := ctx.PostForm("password")
@@ -94,7 +94,7 @@ func Register(ctx *gin.Context) {
 
 // 登陆
 func Login(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := global.DB
 	user := &model.User{}
 	userName := ctx.PostForm("userName")
 	password := ctx.PostForm("password")
@@ -140,7 +140,7 @@ func BannerPiture(ctx *gin.Context) {
 
 // 创建标签
 func CreateTag(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := global.DB
 	tags := &model.Tags{ArticleTag: ctx.Query("article_tag")}
 	if DB.Create(tags).Error != nil {
 		ctx.JSON(http.StatusOK, gin.H{
@@ -156,7 +156,7 @@ func CreateTag(ctx *gin.Context) {
 // 查询所有标签
 
 func QueryAllTag(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := global.DB
 	result := &[]model.Tags{}
 	DB.Find(result)
 	ctx.JSON(http.StatusOK, gin.H{
@@ -167,7 +167,7 @@ func QueryAllTag(ctx *gin.Context) {
 
 // 创建文章
 func CreateArticle(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := global.DB
 	Article := &model.Article{Tag: ctx.Query("tag")}
 	DB.Create(Article)
 	ctx.JSON(http.StatusOK, gin.H{
@@ -179,7 +179,7 @@ func CreateArticle(ctx *gin.Context) {
 // 查询全部文章
 
 func QueryAllArticle(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := global.DB
 	result := &[]model.Article{}
 	limit, _ := strconv.Atoi(ctx.Query("limit"))
 	offset, _ := strconv.Atoi(ctx.Query("offset"))
@@ -196,7 +196,7 @@ func QueryAllArticle(ctx *gin.Context) {
 // 查询一个文章
 
 func QueryOneArticle(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := global.DB
 	UUID := ctx.Query("uuid")
 	result := &model.Article{}
 	DB.Where("uuid = ?", UUID).First(result)
@@ -209,7 +209,7 @@ func QueryOneArticle(ctx *gin.Context) {
 // DeleteArticle
 
 func DeleteArticle(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := global.DB
 	UUID := ctx.Query("uuid")
 	result := &model.Article{}
 	DB.Where("uuid = ?", UUID).First(result)
@@ -222,7 +222,7 @@ func DeleteArticle(ctx *gin.Context) {
 
 // 根据标签查询分类
 func Query(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := global.DB
 	var articles []model.Article
 	Sql := fmt.Sprintf(
 		`SELECT * FROM  article  WHERE article.tag = 
@@ -270,7 +270,7 @@ func ReturnJson(ctx *gin.Context) {
 
 // 添加网址
 func ADDFavorite(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := global.DB
 	Favorites := &model.Favorites{
 		Name: ctx.Query("name"),
 		Link: ctx.Query("link"),
@@ -284,7 +284,7 @@ func ADDFavorite(ctx *gin.Context) {
 
 // 查询全部收藏
 func QueryFavorites(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := global.DB
 	result := &[]model.Favorites{}
 	DB.Find(result)
 	ctx.JSON(http.StatusOK, gin.H{
@@ -295,7 +295,7 @@ func QueryFavorites(ctx *gin.Context) {
 
 // 删除一个
 func DeleteFavorite(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := global.DB
 
 	UUID := ctx.Query("uuid")
 	result := &model.Favorites{}
@@ -309,7 +309,7 @@ func DeleteFavorite(ctx *gin.Context) {
 
 // 观看次数
 func WatchNumber(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := global.DB
 	UUID := ctx.Query("uuid")
 	article := &model.Article{}
 	DB.Where("uuid = ?", UUID).First(&article).Update("WhatchNumber", article.WhatchNumber+1)
@@ -321,7 +321,7 @@ func WatchNumber(ctx *gin.Context) {
 
 // Like
 func Like(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := global.DB
 	UUID := ctx.Query("uuid")
 	result := &model.Article{}
 	DB.Where("uuid = ?", UUID).First(result).Update("Like", result.Like+1)
@@ -333,7 +333,7 @@ func Like(ctx *gin.Context) {
 
 // 评论 文章
 func Comment(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := global.DB
 	// 判断是否回复文章
 	tokenString := ctx.GetHeader("Authorization")[7:]
 	userId, err := util.GetUserId(tokenString)
@@ -404,7 +404,7 @@ func Comment(ctx *gin.Context) {
 
 // 递归
 func tree(commons []model.Comment) []map[string]interface{} {
-	DB := common.GetDB()
+	DB := global.DB
 	Replys := []model.Comment{}
 	var result []map[string]interface{}
 	for _, item := range commons {
@@ -423,7 +423,7 @@ func tree(commons []model.Comment) []map[string]interface{} {
 
 // 获取评论
 func GetComment(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := global.DB
 	article := model.Article{UUID: ctx.Query("articleId")}
 	commons := []model.Comment{}
 	if DB.Select("id").Where("uuid=?", article.UUID).First(&article).Error == nil &&

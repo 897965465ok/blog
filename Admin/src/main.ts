@@ -1,4 +1,4 @@
-import { createApp, createVNode } from 'vue'
+import { createApp, createVNode,provide} from 'vue'
 import App from './App.vue'
 import { router } from "./router"
 import { store } from "./store"
@@ -6,6 +6,7 @@ import './index.css'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import * as Icons from '@element-plus/icons-vue'
+
 // 创建Icon组件
 const Icon = (props: { icon: string }) => {
     const { icon } = props
