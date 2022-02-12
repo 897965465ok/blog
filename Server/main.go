@@ -12,6 +12,8 @@ import (
 func main() {
 	common.InitConfig()
 	global.DB = common.InitDB()
+	sql, _ := global.DB.DB()
+	defer sql.Close()
 	r := gin.Default()
 	r = CollectRouter(r)
 	r.Run(viper.GetString("server.host"))

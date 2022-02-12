@@ -1,12 +1,15 @@
 <template>
-    <div id="home" class="w-96 h-96"></div>
+    <div class="w-full h-full">
+        <div class="w-full h-1/2"></div>
+        <div class="w-full h-1/2"></div>
+    </div>
 </template>
 <script  setup lang='ts'>
 import { reactive, defineProps, onMounted } from 'vue'
 import * as echarts from 'echarts';
 onMounted(() => {
     // 基于准备好的dom，初始化echarts实例
-    const Chart = echarts.init((document.querySelector("#home") as any));
+    const Chart = echarts.init((document.querySelector("#count") as any));
     // 绘制图表
     Chart.setOption(
         {

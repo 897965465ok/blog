@@ -2,6 +2,10 @@
 import qs from 'qs'
 // 如果前端配置了这个withCredentials=true，后段设置Access-Control-Allow-Origin不能为 " * ",必须是你的源地址啊
 // axios.defaults.withCredentials=true
+
+import dayjs from 'dayjs'
+
+
 export default {
     install: function (Vue, options) {
         // 1. 添加全局方法或属性
@@ -134,6 +138,9 @@ export default {
                 timer = null
             }
             return debounce
+        }
+        Vue.prototype.$qsTime = (time)=> {
+            return dayjs(time).format("YYYY-MM-DD-HH")
         }
     }
 }

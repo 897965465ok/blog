@@ -24,7 +24,7 @@
             <span class="iconfont icon-yuedu">
               {{ article.whatch_number }}</span
             >
-            <span class="iconfont icon-shijian"> {{ article.CreatedAt }}</span>
+            <span class="iconfont icon-shijian"> {{  $qsTime(article.CreatedAt) }}</span>
           </div>
         </el-row>
       </el-col>
