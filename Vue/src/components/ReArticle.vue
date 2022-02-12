@@ -1,8 +1,5 @@
 <template>
-  <el-row
-    class="card-item"
-    @click.native="readArticler(article.article_path, article.uuid)"
-  >
+  <el-row class="card-item" @click.native="readArticler(article.article_path, article.uuid)">
     <el-col class="card-left">
       <el-row class="title">
         <h4>{{ article.name.replace(".md", "") }}</h4>

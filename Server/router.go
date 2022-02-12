@@ -15,6 +15,7 @@ import (
 // DELETE /product/ID：删除某个商品
 // GET /product/ID/purchase ：列出某个指定商品的所有投资者
 // get /product/ID/purchase/ID：获取某个指定商品的指定投资者信息
+
 func createRender() multitemplate.Renderer {
 	r := multitemplate.NewRenderer()
 	r.AddFromFiles("index", "./view/index.html")
@@ -58,7 +59,7 @@ func CollectRouter(r *gin.Engine) *gin.Engine {
 		// 删除收藏网址
 		V1.DELETE("/favorite", controller.DeleteFavorite)
 		// markdown
-		V1.PUT("/markdowntohtml", controller.MarkdownToHmtl)
+		V1.PUT("/markdowntohtml", middleware.AuthMiddleware(), controller.MarkdownToHmtl)
 
 		//  注册
 		V1.POST("/register", controller.Register)

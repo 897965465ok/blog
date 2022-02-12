@@ -90,3 +90,19 @@ export const getOauthInfo = async userInfo => {
         }
     });
 };
+
+export const readArticler = async (uuid) => {
+    return await api.get("v1/watchnumber", {
+        params: {
+            uuid,
+        },
+    });
+
+}
+export const like = async (uuid) => {
+    return await api.get("/v1/like", {
+        params: {
+            uuid,
+        },
+    });
+}

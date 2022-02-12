@@ -5,7 +5,7 @@
     @click.native="readArticler(article.article_path, article.uuid)"
   >
     <el-row class="item-wrapper">
-      <el-row class="card-top">
+      <el-row class="card-content">
         <el-row class="title">
           <h5>{{ article.name.replace(".md", "") }}</h5>
         </el-row>
@@ -38,6 +38,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
+import * as api from "../api/BlogApi"
 export default {
   data() {
     return {
@@ -61,19 +62,11 @@ export default {
   name: "Articler",
   methods: {
     async readArticler(articlerPath, uuid) {
-      await this.$api.get("v1/watchnumber", {
-        params: {
-          uuid,
-        },
-      });
+      await api.readArticler(uuid)
       this.$router.push({ path: "markdown", query: { articlerPath, uuid } });
     },
     async like(uuid, article) {
-      await this.$api.get("/v1/like", {
-        params: {
-          uuid,
-        },
-      });
+      await api.like(uuid)
       article.like += 1;
     },
   },
@@ -92,11 +85,12 @@ export default {
   margin-bottom: 12px;
   .item-wrapper {
     width: 100%;
-    .card-top {
+
+    .card-content {
       height: 100%;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: space-around;
       .title {
         font-size: 15px;
         color: #333;
