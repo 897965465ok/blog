@@ -1,42 +1,40 @@
 <template>
-  <el-row
+  <el-col
+    :span="8"
     class="card-item"
     @click.native="readArticler(article.article_path, article.uuid)"
   >
-    <el-row class="item-wrapper" :span="24">
-      <el-col class="card-left" :span="19">
+    <el-row class="item-wrapper">
+      <el-row class="card-top">
         <el-row class="title">
-          <h4>{{ article.name.replace(".md", "") }}</h4>
+          <h5>{{ article.name.replace(".md", "") }}</h5>
         </el-row>
-        <el-row class="paragraph">
-          <!-- {{ article.article_path }} -->
+        <!-- <el-row class="paragraph">
+          {{ article.article_path }}
+        </el-row>-->
+        <el-row class="card-middle">
+          <el-image :src="url" lazy>
+            <div slot="error" class="image-slot">
+              <i class="el-icon-picture-outline"></i>
+            </div>
+          </el-image>
         </el-row>
         <el-row class="footer">
-          <div class="footer-left">
+          <div class="footer-top">
             <span class="item-tag">{{ article.tag }}</span>
             <span
               @click.stop="like(article.uuid, article)"
               class="iconfont icon-zan"
-              >{{ article.like }}</span
-            >
+            >{{ article.like }}</span>
           </div>
-          <div class="footer-right">
-            <span class="iconfont icon-yuedu">
-              {{ article.whatch_number }}</span
-            >
-            <span class="iconfont icon-shijian"> {{  $qsTime(article.CreatedAt) }}</span>
+          <div class="footer-bottom">
+            <span class="iconfont icon-yuedu">{{ article.whatch_number }}</span>
+            <span class="iconfont icon-shijian">{{ $qsTime(article.CreatedAt) }}</span>
           </div>
         </el-row>
-      </el-col>
-      <el-col class="card-right" :span="5">
-        <el-image :src="url" lazy>
-          <div slot="error" class="image-slot">
-            <i class="el-icon-picture-outline"></i>
-          </div>
-        </el-image>
-      </el-col>
+      </el-row>
     </el-row>
-  </el-row>
+  </el-col>
 </template>
 <script>
 import { mapState } from "vuex";
@@ -47,7 +45,7 @@ export default {
     };
   },
   mounted() {
-    let random = this.$random(0,216)
+    let random = this.$random(0, 216)
     if (this.pictures[random]) {
       this.url = this.pictures[random].small;
     }
@@ -86,17 +84,15 @@ export default {
 @import "../assets/icon/iconfont.css";
 .card-item {
   cursor: pointer;
-  height: 135px;
   box-sizing: border-box;
   background-color: #fff;
   border: none;
-  border-bottom: solid 1px #999;
   display: flex;
   align-items: center;
+  margin-bottom: 12px;
   .item-wrapper {
-    height: 115px;
     width: 100%;
-    .card-left {
+    .card-top {
       height: 100%;
       display: flex;
       flex-direction: column;
@@ -113,12 +109,11 @@ export default {
         width: 100%;
         color: #999;
         display: flex;
-        .footer-left,
-        .footer-right {
-          flex: 1 0 50%;
-          span {
-            margin: 0px 6px;
-          }
+        flex-direction: column;
+        .footer-top {
+          display: flex;
+          justify-content: space-between;
+          margin: 6px 0px;
           .item-tag {
             padding: 4px;
             display: inline-block;
@@ -129,15 +124,14 @@ export default {
             font-size: 12px;
           }
         }
-        .footer-right {
+        .footer-bottom {
           display: flex;
-          justify-content: flex-end;
+          justify-content: space-between;
         }
       }
     }
-    .card-right {
+    .card-middle {
       height: 100%;
-
       display: flex;
       justify-content: center;
       align-items: center;

@@ -2,11 +2,10 @@
   <el-row class="main">
     <el-row class="main-content">
       <el-col class="content-left" :span="16">
-        <el-row class="card-wrapper">
-          <Articler v-for="item in articles.slice(0, 4)" :key="item.uuid" :article="item"></Articler>
-
+        <el-row class="card-wrapper" :gutter="12">
+          <Articler v-for="item in articles.slice(0, 6)" :key="item.uuid" :article="item"></Articler>
           <Carousel></Carousel>
-          <Articler v-for="item in articles.slice(4, 9)" :key="item.uuid" :article="item"></Articler>
+          <Articler v-for="item in articles.slice(6, 18)" :key="item.uuid" :article="item"></Articler>
         </el-row>
       </el-col>
       <el-col class="content-right" :span="8">
@@ -15,9 +14,7 @@
             <Profile></Profile>
           </el-col>
         </el-row>
-
-        <ReArticle v-for="item in articles.slice(9, 16)" :key="item.uuid" :article="item"></ReArticle>
-
+        <ReArticle v-for="item in articles.slice(12, 18)" :key="item.uuid" :article="item"></ReArticle>
         <el-row>
           <el-image
             src="https://tva2.sinaimg.cn/large/87c01ec7gy1frmmz605z4j21kw0w0qvh.jpg"
@@ -25,13 +22,10 @@
             lazy
           ></el-image>
         </el-row>
-
         <el-row class="favorites-link">
-          <waterfall :col="3" :data="favorites" :gutterWidth="10">
-            <div class="favorites-item" v-for="(item, index) in favorites" :key="index">
-              <el-button @click.native="$skip(item.link)">{{ item.userName }}</el-button>
-            </div>
-          </waterfall>
+          <div class="favorites-item" v-for="(item, index) in favorites" :key="index">
+            <el-button @click.native="$skip(item.link)">{{ item.userName }}</el-button>
+          </div>
         </el-row>
       </el-col>
     </el-row>

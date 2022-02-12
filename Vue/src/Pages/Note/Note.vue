@@ -18,7 +18,7 @@
             </el-menu-item>
           </el-menu>
         </el-row>
-        <el-row class="card-wrapper">
+        <el-row class="card-wrapper" :gutter="16">
           <transition-group  name="fade">
             <Articler
               v-for="item in temporary"
