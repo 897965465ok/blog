@@ -6,7 +6,9 @@
      extend: {},
    },
    variants: {
-     extend: {},
+     extend: {
+      backgroundColor: ['active','disabled'],
+     },
    },
    plugins: [],
  }

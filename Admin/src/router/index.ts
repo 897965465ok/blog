@@ -11,7 +11,7 @@ export const router: Router = createRouter({
             },
             {
                 path: '/banner',
-                component: () => import("../pages/banner/banner.vue")
+                component: () => import("../pages/banner/Banner.vue")
             },
             {
                 path: '/article',

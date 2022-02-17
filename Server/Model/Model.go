@@ -108,7 +108,7 @@ type Banner struct {
 	Large     string `gorm:"type:varchar(255);" json:"large"`
 	Original  string `gorm:"type:varchar(255);" json:"original"`
 	Small     string `gorm:"type:varchar(255);" json:"small"`
-	ImgUrlID  string `gorm:"type:varchar(50);" json:"imgUrl"`
+	ImgUrlID  string `gorm:"type:varchar(50);" json:"img_url_id"`
 }
 
 type Args []string

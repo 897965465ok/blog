@@ -1,6 +1,6 @@
 <template>
     <div class="w-full h-full">
-        <div class="w-full h-1/2"></div>
+        <div id="count" class="w-full h-1/2"></div>
         <div class="w-full h-1/2"></div>
     </div>
 </template>

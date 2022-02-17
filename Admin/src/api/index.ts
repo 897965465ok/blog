@@ -20,10 +20,11 @@ export const wallhaven = async (params: wallhaven) => {
      let { data } = await api.get("admin/wallhaven", {
           params
      });
+     console.log(data)
      return data.result;
 };
 
-export const appendBanner: appendBanner = async (bannerIds) => {
+export const bannerPlush: appendBanner = async (bannerIds) => {
      let form = new FormData()
      form.append("bannerIds", JSON.stringify(bannerIds))
      return await api.post("admin/appendbanner", form, {

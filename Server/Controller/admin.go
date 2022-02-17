@@ -133,7 +133,7 @@ func AppendBanner(ctx *gin.Context) {
 	temp := model.Banner{}
 	jsonparser.ArrayEach([]byte(ctx.PostForm("bannerIds")), func(uuid []byte, dataType jsonparser.ValueType, offset int, err error) {
 		DB.Raw(`SELECT
-		small,url,short_url,path,original,large,uuid as img_id
+		small,url,short_url,path,original,large,uuid as img_url_id
 		FROM img_url
 		WHERE uuid = ?`, string(uuid)).Scan(&temp)
 		banner = append(banner, temp)
@@ -175,11 +175,22 @@ func DeleteBanner(ctx *gin.Context) {
 func Wallhaven(ctx *gin.Context) {
 	var count int64
 	DB := global.DB
-	Img := &[]model.ImgUrl{}
+	Imgs := make([]map[string]interface{}, 0)
 	DB.Model(&model.ImgUrl{}).Count(&count)
 	limit, _ := strconv.Atoi(ctx.Query("limit"))
 	offset, _ := strconv.Atoi(ctx.Query("offset"))
-	err := DB.Select([]string{"small", "original", "large", "uuid", "id"}).Limit(limit).Offset(limit * offset).Find(Img).Error
+	err := DB.Model(&model.ImgUrl{}).
+		Select([]string{"small", "original", "large", "uuid", "id"}).
+		Limit(limit).Offset(limit * offset).Find(&Imgs).Error
+	for _, item := range Imgs {
+		// 判断是否存在
+		if RowsAffected := DB.Where("img_url_id=?", item["uuid"]).
+			Find(&model.Banner{}).
+			RowsAffected; RowsAffected > 0 {
+			item["check"] = true
+			fmt.Println("存在")
+		}
+	}
 	if err != nil {
 		ctx.JSON(http.StatusOK, gin.H{
 			"code":   http.StatusNotFound,
@@ -188,7 +199,7 @@ func Wallhaven(ctx *gin.Context) {
 	}
 	container := make(map[string]interface{})
 	container["count"] = count
-	container["imgs"] = Img
+	container["imgs"] = Imgs
 	ctx.JSON(http.StatusOK, gin.H{
 		"code":   http.StatusOK,
 		"result": container,

@@ -1,7 +1,6 @@
 <template>
-    <el-row  v-loading="state.tableLoading">
+    <el-row v-loading="state.tableLoading">
         <el-table
-           
             style="min-height:80%;"
             :data="state.articles"
             :cell-style="(state.center as any)"
@@ -44,7 +43,6 @@ const getArticles = async (current: number = 1) => {
         offset: current
     })
     state.count = data.count
-    console.log(data.count)
     state.articles = data.result.map((item: any) => {
         item.CreatedAt = qsTime(item.CreatedAt)
         return item

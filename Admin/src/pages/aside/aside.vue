@@ -3,17 +3,25 @@
         <el-row class="h-full">
             <el-col class="h-full">
                 <el-menu class="h-full" default-active="1">
-                    <el-menu-item
-                        :index="item.path"
-                        v-for="item in MenuList"
-                        :key="item.path"
-                        @click="jump(item.path)"
-                    >
-                        <el-icon>
-                            <Icon :icon="item.iconName"></Icon>
-                        </el-icon>
-                        <span>{{ item.text }}</span>
-                    </el-menu-item>
+                    <el-sub-menu :index="item.text" v-for="(item, index) in MenuList" :key="index">
+                        <template v-slot:title>
+                            <el-icon>
+                                <Icon :icon="item.iconName"></Icon>
+                            </el-icon>
+                            <span>{{ item.text }}</span>
+                        </template>
+                        <el-menu-item
+                            v-for="child in item.children"
+                            :key="child.path"
+                            :index="child.path"
+                            @click="jump(child.path)"
+                        >
+                            <el-icon>
+                                <Icon :icon="child.iconName"></Icon>
+                            </el-icon>
+                            <span>{{ child.text }}</span>
+                        </el-menu-item>
+                    </el-sub-menu>
                 </el-menu>
             </el-col>
         </el-row>
@@ -30,24 +38,43 @@ let { MenuList } = reactive({
     MenuList: [
         {
             iconName: "HomeFilled",
-            text: "首页",
-            path: "/"
-        },
-        {
-            iconName: "PictureFilled",
-            text: "轮播图",
-            path: "/banner"
-        },
-        {
-            iconName: "PriceTag",
-            text: "用户",
-            path: "/user"
+            text: "博客管理",
+            children: [
+                {
+                    iconName: "PictureFilled",
+                    text: "轮播图",
+                    path: "/banner"
+                },
+                {
+                    iconName: "Setting",
+                    text: "首页文章",
+                    path: "/article"
+                },
+                // {
+                //     iconName: "Setting",
+                //     text: "侧边栏文章",
+                //     path: "/article"
+                // },
+                // {
+                //     iconName: "Setting",
+                //     text: "喜欢的网站",
+                //     path: "/article"
+                // }
+            ]
         },
         {
             iconName: "Setting",
-            text: "文章",
-            path: "/article"
-        }
+            text: "后台管理",
+            children: [
+                {
+                    iconName: "PriceTag",
+                    text: "用户",
+                    path: "/user"
+                },
+            ]
+        },
+
+
     ]
 })
 </script>

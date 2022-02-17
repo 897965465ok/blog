@@ -12,6 +12,6 @@
     "lib": ["esnext", "dom"],
     "types": ["element-plus/global"]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/pages/banner/table.ts", "src/pages/article/article.tsx", "src/pages/article/article.js", "src/router/index.js"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/pages/banner/table.ts", "src/pages/article/article.tsx", "src/pages/article/article.js", "src/router/index.js", "src/store/index.ts"],
 
 }

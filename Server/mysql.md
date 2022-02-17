@@ -786,8 +786,8 @@ select * from student as a left  join class b using(id);
 3、子查询其实可以独立存在：是一条完整的select语句
 
 . 子查询分类
-
 . 按功能划分
+
 1、标量子查询：子查询返回的结果是一个数据(一行一列)
    .概念
    .标量子查询：子查询得到结果是一个数据(一行一列)
@@ -799,6 +799,7 @@ select * from student as a left  join class b using(id);
 -- 标量子查询实现
 -- 列:
 select * from goods where goods_id = (select goods_id from goods where goods_name = '诺基亚N85');
+
 //需求决定主查询，条件决定子查询
 
 2、列子查询：返回的结果是一列(一列多行)

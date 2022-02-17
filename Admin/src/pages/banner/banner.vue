@@ -1,4 +1,5 @@
 <template>
+    <!-- 轮播图 -->
     <!-- <el-row :gutter="5">
         <el-col :offset="6" :span="12">
             <el-carousel>
@@ -12,34 +13,19 @@
             </el-carousel>
         </el-col>
     </el-row>-->
-    <el-dialog v-model="centerDialogVisible" class="flex flex-col" top="1vh" width="95vw" center>
-        <el-row style="min-height:81vh;" v-loading="loading" :gutter="5" @click="changeItme">
-            <el-col :span="6" v-for="item in banner" :key="item.uuid">
-                <el-image class="w-full cursor-pointer" :uuid="item.uuid" :src="item.large" lazy></el-image>
-            </el-col>
-        </el-row>
-        <el-row>
-            <el-col :span="24" class="w-full flex justify-center items-center">
-                <el-pagination
-                    background
-                    :page-size="12"
-                    :pager-count="12"
-                    layout="prev, pager, next"
-                    :total="pictures"
-                    @current-change="loadImg"
-                ></el-pagination>
-                <el-button size="small" type="success" @click="appendBanner">点击添加</el-button>
-            </el-col>
-        </el-row>
-    </el-dialog>
+    <BannerPlush
+     v-model="openPlush"
+    :openPlush="openPlush"
+  ></BannerPlush>
+    <!-- <BannerRemove v-model="openRemove" :isShow="openRemove"></BannerRemove> -->
     <el-row>
         <el-col>
-            <el-button size="small" @click="appendPitrue" type="primary">批量增加</el-button>
-            <el-button size="small" :icon="Edit" type="info">修改</el-button>
-            <el-button size="small" :icon="Delete" type="danger">删除</el-button>
+            <el-button size="small" @click="bannerPlush" :icon="Delete" type="primary">批量增加</el-button>
+            <!-- <el-button size="small" :icon="Edit" type="info">修改</el-button> -->
+            <el-button size="small" @click="bannerRemove" :icon="Delete" type="danger">批量删除</el-button>
         </el-col>
     </el-row>
-    <el-row class="min-h-full" v-loading="state.tableLoading">
+    <el-row class="min-h-full" v-loading="tableLoading">
         <el-table :cell-style="(center as any)" :data="tableData">
             <el-table-column prop="ID" label="图片ID" width="80"></el-table-column>
             <el-table-column prop="CreatedAt" label="创建时间" width="150">
@@ -63,113 +49,45 @@
                 </template>
             </el-table-column>
         </el-table>
-        <paginationVue
-            @loadTime="loadBanner"
-            :count="state.count"
-            :pageSize="5"
-            callback="loadTime"
-        ></paginationVue>
+        <paginationVue @loadTime="loadBanner" :count="count" :pageSize="5" callback="loadTime"></paginationVue>
     </el-row>
 </template> 
-<script  setup lang="ts" >
-import * as api from "../../api"
-import { reactive, toRefs, toRaw, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
-import { qsTime } from "../../util"
-import { Edit, Share, Delete, Search, Upload } from '@element-plus/icons-vue'
-import paginationVue from "../../components/pagination.vue"
 
+<script  setup lang="ts" >
+import { reactive, ref, toRefs, toRaw, onMounted, computed } from 'vue'
+import { Edit, Share, Delete } from '@element-plus/icons-vue'
+import paginationVue from "../../components/pagination.vue"
+import BannerPlush from "./BannerPlush.vue"
+import BannerRemove from "./BannerRemove.vue"
+import { useStore } from 'vuex'
 // 表头水平居中：给 el-table 标签绑定 header-cell-style 属性
 // <el-table :header-cell-style="{'text-align':'center'}"></el-table>
 // 表格内容水平居中：给 el-table 标签绑定 cell-style 属性
 // <el-table :cell-style="{textAlign:'center'}"></el-table>
-
+const store = useStore()
+const state = reactive({
+    openRemove: false,
+    openPlush: false
+})
 const center = { 'text-align': 'center' }
-const state = reactive<dataType>({
-    tableData: [],
-    centerDialogVisible: false,
-    banner: [],
-    saveList: [],
-    pictures: 0,
-    loading: false,
-    count: 0,
-    tableLoading: false,
+onMounted(() => loadBanner())
+let tableData = ref(computed(() => store.state.Banner))
+let count = ref(computed(() => store.state.BannerLenght))
+let tableLoading = ref(computed(() => store.state.tableLoading))
 
-})
-const loadBanner = async (current: number = 1) => {
-    state.tableLoading = !state.tableLoading
-    let { result, count } = await api.getBanner({
-        limit: 5,
-        offset: current
-    })
-    state.count = count
-    state.tableLoading = !state.tableLoading
-    state.tableData = result.map((item: any) => {
-        item.CreatedAt = qsTime(item.CreatedAt)
-        return item
-    })
-
+const loadBanner = (current: number = 1) => {
+    store.dispatch('loadBanner', { limit: 5, offset: current })
+}
+const bannerPlush = () => {
+    store.dispatch('wallhaven', { limit: 12, offset: 1 })
+    state.openPlush = !state.openPlush
 }
 
-onMounted(() => {
-    loadBanner()
-})
+const bannerRemove = () => state.openRemove = !state.openRemove
 
-const loadImg = (current: number) => {
-    state.loading = !state.loading
-    api.wallhaven({
-        limit: 12,
-        offset: current
-    }).then(({ count, imgs }) => {
-        state.pictures = count
-        state.banner = imgs
-        state.loading = !state.loading
-    })
-}
-const appendPitrue = () => {
-    state.centerDialogVisible = !state.centerDialogVisible
-    state.loading = !state.loading
-    api.wallhaven({
-        limit: 12,
-        offset: 1
-    }).then(({ count, imgs }) => {
-        state.pictures = count
-        state.banner = imgs
-        state.loading = !state.loading
-    })
-}
-function changeItme(event: MouseEvent) {
-    if (event.target != null && (event.target as HTMLImageElement).nodeName == 'IMG') {
-        let uuid = (event.target as HTMLImageElement).getAttribute("uuid")
-        let node = state.banner.find((item) => item.uuid == uuid)
-        if (node != undefined && state.saveList.findIndex((item) => item.uuid == uuid) == -1) {
-            state.saveList.push(node)
-            ElMessage.success("成功添加到列表")
-        } else {
-            ElMessage.warning("重复提交")
-        }
+const deleteBanner = (ID) => store.dispatch('deleteBanner', ID)
 
-    }
-}
-
-async function deleteBanner(ID: string) {
-    let { message } = await api.deleteBanner(ID)
-    state.tableData.forEach((item: any, index: number) => {
-        if (item.ID == ID) {
-            state.tableData.splice(index, 1)
-        }
-    })
-    ElMessage.success(message)
-}
-
-async function appendBanner() {
-    let bannerIds = state.saveList.map(item => item.uuid)
-    let result = await api.appendBanner(bannerIds)
-    ElMessage.success(result.data.message)
-
-}
-
-let { tableData, centerDialogVisible, banner, pictures, loading } = toRefs(state)
+const { openRemove,openPlush } = toRefs(state)
 </script>
 <style scoped>
 .el-carousel__item h3 {
