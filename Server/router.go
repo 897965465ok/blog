@@ -3,9 +3,12 @@ package main
 import (
 	controller "main/Controller"
 	middleware "main/Middleware"
+	_ "main/docs"
 
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // GET /product：列出所有商品
@@ -28,11 +31,12 @@ func CollectRouter(r *gin.Engine) *gin.Engine {
 	r.Use(middleware.LogerMiddleware())
 	r.Static("/static", "./view/static")
 	r.Static("/v1/markdown", "./markdown")
+
 	// r.LoadHTMLFiles("./view/index.tmpl")
 	// 更换成自己的模板
 	r.HTMLRender = createRender()
 	r.GET("/", controller.Index)
-	// r.GET("/ws", controller.WsCnection)
+	r.GET("/ws", controller.WsCnection)
 	r.NoRoute(controller.Index)
 	V1 := r.Group("v1")
 	{
@@ -84,7 +88,6 @@ func CollectRouter(r *gin.Engine) *gin.Engine {
 		V1.GET("/openid", controller.Cookies)
 		V1.GET("/comment", middleware.AuthMiddleware(), controller.GetComment)
 		V1.POST("/wallhaven2", controller.Wallhaven_V2)
-		V1.POST("/should", controller.TestShould)
 		V1.GET("/oauth", controller.Oauth)
 
 	}
@@ -95,6 +98,10 @@ func CollectRouter(r *gin.Engine) *gin.Engine {
 		Admin.POST("/appendbanner", controller.AppendBanner)
 		Admin.POST("/deletebanner", controller.DeleteBanner)
 		Admin.POST("/queryuser", controller.QueryUser)
+	}
+	Swagger := r.Group("swagger")
+	{
+		Swagger.GET("/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	}
 	return r
 }

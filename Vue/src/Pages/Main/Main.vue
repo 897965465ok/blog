@@ -21,11 +21,13 @@
             alt="二维码图片"
             lazy
           ></el-image>
+          <Music></Music>
         </el-row>
+                 <music-vue></music-vue>
         <el-row class="favorites-link">
-          <div class="favorites-item" v-for="(item, index) in favorites" :key="index">
+          <!-- <div class="favorites-item" v-for="(item, index) in favorites" :key="index">
             <el-button @click.native="$skip(item.link)">{{ item.userName }}</el-button>
-          </div>
+          </div>-->
         </el-row>
       </el-col>
     </el-row>
@@ -37,6 +39,7 @@ import Profile from "./Profile/Profile";
 import { mapState, mapActions } from "vuex";
 import * as api from "../../api/BlogApi"
 import Vue from "vue";
+import Music from "../../components/Music.vue";
 let loading;
 // (() => {
 //   let once = true;
@@ -95,7 +98,8 @@ export default {
   components: {
     Carousel,
     Profile,
-  },
+    Music
+},
   methods: {
     ...mapActions(["changeAll", "getPictures", "setRecommen", "wallhaven"]),
   },

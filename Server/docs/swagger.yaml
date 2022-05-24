@@ -1,0 +1,57 @@
+definitions:
+  controller.ResponseError:
+    additionalProperties: true
+    type: object
+info:
+  contact: {}
+paths:
+  /admin/getBanner:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 数量
+        in: query
+        name: limit
+        required: true
+        type: number
+      - description: 第几页
+        in: query
+        name: offset
+        required: true
+        type: number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.ResponseError'
+      summary: 获取轮播图
+      tags:
+      - admin
+  /admin/wallhaven_V2:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - admin
+  /example/helloworld:
+    get:
+      consumes:
+      - application/json
+      description: do ping
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: ping example
+      tags:
+      - example
+swagger: "2.0"

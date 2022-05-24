@@ -1,23 +1,6 @@
 <template>
-    <!-- 轮播图 -->
-    <!-- <el-row :gutter="5">
-        <el-col :offset="6" :span="12">
-            <el-carousel>
-                <el-carousel-item
-                    class="w-full h-full"
-                    v-for="(item,index) in tableData "
-                    :key="index"
-                >
-                    <el-image :fit="'fill'" class="w-full h-full" :src="item.large" ></el-image>
-                </el-carousel-item>
-            </el-carousel>
-        </el-col>
-    </el-row>-->
-    <BannerPlush
-     v-model="openPlush"
-    :openPlush="openPlush"
-  ></BannerPlush>
-    <!-- <BannerRemove v-model="openRemove" :isShow="openRemove"></BannerRemove> -->
+    <BannerPlush v-model="openPlush" :openPlush="openPlush"></BannerPlush>
+    <BannerRemove v-model="openRemove" :openRemove="openRemove"></BannerRemove>
     <el-row>
         <el-col>
             <el-button size="small" @click="bannerPlush" :icon="Delete" type="primary">批量增加</el-button>
@@ -25,20 +8,21 @@
             <el-button size="small" @click="bannerRemove" :icon="Delete" type="danger">批量删除</el-button>
         </el-col>
     </el-row>
-    <el-row class="min-h-full" v-loading="tableLoading">
+    <el-row v-loading="tableLoading">
         <el-table :cell-style="(center as any)" :data="tableData">
             <el-table-column prop="ID" label="图片ID" width="80"></el-table-column>
             <el-table-column prop="CreatedAt" label="创建时间" width="150">
                 <template v-slot:default="scope">{{ scope.row.CreatedAt }}</template>
             </el-table-column>
-            <el-table-column prop="large" label="图片路径" width="180" minHeight="60">
-                <template v-slot:default="scope">
-                    <el-image :fit="'fill'" class="w-full h-full" :src="scope.row.large"></el-image>
+            <el-table-column prop="large" label="图片路径" width="200" >
+                <template   v-slot:default="scope">
+                    <el-image  style="width: 200px; height:80px;" :fit="'fill'" :src="scope.row.large">
+                    </el-image>
                 </template>
             </el-table-column>
-            <el-table-column>
+            <el-table-column width="200">
                 <template v-slot:default="scope">
-                    <el-button size="small" :icon="Edit" type="info" circle></el-button>
+                    <!-- <el-button size="small" :icon="Edit" type="info" circle></el-button> -->
                     <el-button
                         @click="deleteBanner(scope.row.ID)"
                         type="danger"
@@ -69,7 +53,7 @@ const state = reactive({
     openRemove: false,
     openPlush: false
 })
-const center = { 'text-align': 'center' }
+const center = { "textAlign": 'center' }
 onMounted(() => loadBanner())
 let tableData = ref(computed(() => store.state.Banner))
 let count = ref(computed(() => store.state.BannerLenght))
@@ -85,9 +69,9 @@ const bannerPlush = () => {
 
 const bannerRemove = () => state.openRemove = !state.openRemove
 
-const deleteBanner = (ID) => store.dispatch('deleteBanner', ID)
+const deleteBanner = (ID: any) => store.dispatch('deleteBanner', ID)
 
-const { openRemove,openPlush } = toRefs(state)
+const { openRemove, openPlush } = toRefs(state)
 </script>
 <style scoped>
 .el-carousel__item h3 {
@@ -106,5 +90,6 @@ const { openRemove,openPlush } = toRefs(state)
 .el-carousel__item:nth-child(2n + 1) {
     background-color: #d3dce6;
 }
+
 </style>
 

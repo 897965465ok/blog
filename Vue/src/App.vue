@@ -3,16 +3,11 @@
     <transition name="fade">
       <router-view :key="$route.path" />
     </transition>
-    <!-- <Music></Music> -->
-    <!-- src/components/HelloWorld.vue -->    
+    <Music></Music>
   </div>
 </template>
 <script>
-import Music from "./Pages/Music/Music";
 export default {
-  components: {
-    Music
-  },
   name: "App"
 };
 </script>

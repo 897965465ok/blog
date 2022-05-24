@@ -2,7 +2,6 @@ package controller
 
 import (
 	"fmt"
-	util "main/Util"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -67,11 +66,5 @@ func Cookies(ctx *gin.Context) {
 // openid
 func Openid(ctx *gin.Context) {
 	ctx.Query("appid")
-
-}
-func TestShould(ctx *gin.Context) {
-	util.Success(ctx, gin.H{
-		"code":   http.StatusOK,
-		"result": "测试函数"}, "成功")
 
 }

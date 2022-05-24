@@ -1,34 +1,37 @@
 <template>
-    <el-dialog v-model="openPlush" class="flex flex-col" top="1vh" width="95vw" center>
-        <el-row style="min-height:81vh;" v-loading="loading" :gutter="5" @click="changeItme">
-            <el-col class="mask" :span="6" v-for="item in banner" :key="item.uuid">
-                <el-image class="cursor-pointer" :uuid="item.uuid" :src="item.large" lazy></el-image>
-                <el-col class="mask-item rounded-xl">
-                    <Icon v-if="item.check" class="Check" icon="Check"></Icon>
+    <keep-alive>
+        <el-dialog v-model="openRemove" class="flex flex-col" top="1vh" width="95vw" center>
+            <el-row style="min-height:81vh;" v-loading="loading" :gutter="5" @click="changeItme">
+                <el-col class="mask" :span="6" v-for="item in banner" :key="item.uuid">
+                    <el-image class="cursor-pointer" :uuid="item.uuid" :src="item.large" lazy></el-image>
+                    <el-col class="mask-item rounded-xl">
+                        <Icon v-if="item.check" class="Check" icon="Check"></Icon>
+                    </el-col>
                 </el-col>
-            </el-col>
-        </el-row>
-        <el-row>
-            <el-col :span="24" class="w-full flex justify-center items-center">
-                <el-pagination
-                    background
-                    :page-size="12"
-                    :pager-count="12"
-                    layout="prev, pager, next"
-                    :total="pictures"
-                    @current-change="loadImg"
-                ></el-pagination>
-                <el-button size="small" type="success" @click="bannerPlush">点击添加</el-button>
-            </el-col>
-        </el-row>
-    </el-dialog>
+            </el-row>
+            <el-row>
+                <el-col :span="24" class="w-full flex justify-center items-center">
+                    <el-pagination
+                        background
+                        :page-size="12"
+                        :pager-count="12"
+                        layout="prev, pager, next"
+                        :total="pictures"
+                        @current-change="loadImg"
+                    ></el-pagination>
+                    <el-button size="small" type="success" @click="bannerPlush">点击删除</el-button>
+                </el-col>
+            </el-row>
+        </el-dialog>
+    </keep-alive>
 </template>
-
 <script  setup lang='ts'>
 import {
     reactive,
     toRefs,
     computed,
+    watch,
+    ref,
     toRef,
     toRaw,
     onMounted,
@@ -38,30 +41,50 @@ import {
 import { ElMessage } from 'element-plus'
 import * as api from "../../api"
 import { useStore } from 'vuex';
+
 const store = useStore();
 const state = reactive<any>({
-    banner: computed(() => store.state.wallhavenPicture),
-    pictures: computed(() => store.state.wallhavenLength),
+    banner: computed(() => store.state.toDelete),
+    pictures: computed(() => store.state.toDeleteLength),
     loading: computed(() => store.state.loading),
     saveList: [],
     count: 0,
 })
-
-defineProps({
-    openPlush: Boolean
+let props = defineProps({
+    openRemove: Boolean
 })
 
+watch(
+    props,
+    () => {
+        if (props.openRemove) {
+            loadImg()
+        }
+    },
+    {
+        deep: true
+    }
+)
+
+
 const loadImg = (current: number = 1) => {
-    store.dispatch('wallhaven', { limit: 12, offset: current })
+    store.dispatch('toDelete', { limit: 12, offset: current })
 
 }
 function changeItme(event: MouseEvent) {
+    console.log(banner, "banner")
     if (event.target != null && (event.target as HTMLImageElement).nodeName == 'IMG') {
+
         let uuid = (event.target as HTMLImageElement).getAttribute("uuid")
+
         let node = state.banner.find((item: { uuid: string | null; }) => item.uuid == uuid)
+
         if (node != undefined && !node.check && state.saveList.findIndex((item: { uuid: string | null; }) => item.uuid == uuid) == -1) {
+
             node.check = true
+
             state.saveList.push(node)
+
             ElMessage.success("成功添加到列表")
         } else {
             ElMessage.warning("已经拥有该图片")

@@ -10,7 +10,9 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "dayjs": "^1.10.7"
+    "dayjs": "^1.10.7",
+    "hls.js": "^1.1.5",
+    "vue-aplayer": "^1.6.1"
   },
   "devDependencies": {
     "autoprefixer": "^9",

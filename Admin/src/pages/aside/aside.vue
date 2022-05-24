@@ -2,7 +2,14 @@
     <el-Aside>
         <el-row class="h-full">
             <el-col class="h-full">
-                <el-menu class="h-full" default-active="1">
+                <el-menu
+                    router
+                    background-color="#545c64"
+                    text-color="#fff"
+                    active-text-color="#ffd04b"
+                    class="h-full"
+                    default-active="1"
+                >
                     <el-sub-menu :index="item.text" v-for="(item, index) in MenuList" :key="index">
                         <template v-slot:title>
                             <el-icon>
@@ -14,7 +21,6 @@
                             v-for="child in item.children"
                             :key="child.path"
                             :index="child.path"
-                            @click="jump(child.path)"
                         >
                             <el-icon>
                                 <Icon :icon="child.iconName"></Icon>
@@ -31,9 +37,6 @@
 import { reactive } from 'vue';
 import { useRouter, useRoute } from "vue-router"
 const router = useRouter()
-const jump = (path: string) => {
-    router.push(path)
-}
 let { MenuList } = reactive({
     MenuList: [
         {
@@ -49,6 +52,11 @@ let { MenuList } = reactive({
                     iconName: "Setting",
                     text: "首页文章",
                     path: "/article"
+                },
+                {
+                    iconName: "PictureFilled",
+                    text: "音乐管理",
+                    path: "/music"
                 },
                 // {
                 //     iconName: "Setting",

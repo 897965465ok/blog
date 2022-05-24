@@ -19,6 +19,17 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
+// type Response struct {
+// 	Code    uint32      `json:"code"`
+// 	Message uint32      `json:"message"`
+// 	Data    interface{} `json:"data"`
+// }
+
+// type ResponseError struct {
+// 	Code    uint32 `json:"code"`
+// 	Message uint32 `json:"message"`
+// }
+
 var jwtKey = []byte(viper.GetString("jwt.key"))
 
 type Claims struct {

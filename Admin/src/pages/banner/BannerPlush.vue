@@ -23,7 +23,6 @@
         </el-row>
     </el-dialog>
 </template>
-
 <script  setup lang='ts'>
 import {
     reactive,
@@ -34,6 +33,8 @@ import {
     onMounted,
     defineProps,
     defineEmits,
+    onActivated,
+onDeactivated
 } from 'vue'
 import { ElMessage } from 'element-plus'
 import * as api from "../../api"
@@ -51,6 +52,12 @@ defineProps({
     openPlush: Boolean
 })
 
+onActivated(()=>{
+    console.log("进入触发")
+})
+onDeactivated(()=>{
+    console.log("离开触发")
+})
 const loadImg = (current: number = 1) => {
     store.dispatch('wallhaven', { limit: 12, offset: current })
 

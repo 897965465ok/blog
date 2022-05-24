@@ -10,7 +10,9 @@ export const store = createStore({
             wallhavenPicture: [],
             wallhavenLength: 0,
             tableLoading: false,
-            loading: false
+            loading: false,
+            toDelete: [],
+            toDeleteLength: 0
         }
     },
     mutations: {
@@ -33,6 +35,15 @@ export const store = createStore({
         WALLHAVEN(state: any, { count, imgs }) {
             state.wallhavenPicture = imgs
             state.wallhavenLength = count
+        },
+        TO_DELETE(state, data) {
+            let { count, result } = data;
+            state.toDeleteLength = count;
+            state.toDelete = result.map((item: any) => {
+                item.CreatedAt = qsTime(item.CreatedAt)
+                item.uuid = item.id
+                return item
+            })
         }
     },
     actions: {
@@ -43,6 +54,16 @@ export const store = createStore({
                 offset: offset
             }).then(data => {
                 context.commit('LOAD_BANNER', data)
+                context.state.tableLoading = !context.state.tableLoading
+            })
+        },
+        toDelete(context, { limit, offset }) {
+            context.state.tableLoading = !context.state.tableLoading
+            api.getBanner({
+                limit: limit,
+                offset: offset
+            }).then(data => {
+                context.commit('TO_DELETE', data)
                 context.state.tableLoading = !context.state.tableLoading
             })
         },

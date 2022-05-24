@@ -17,6 +17,20 @@ import (
 	"github.com/panjf2000/ants/v2"
 )
 
+// @BasePath /api/v1
+// PingExample godoc
+// @Summary ping example
+// @Schemes
+// @Description do ping
+// @Tags example
+// @Accept json
+// @Produce json
+// @Success 200 {string} Helloworld
+// @Router /example/helloworld [get]
+func Helloworld(g *gin.Context) {
+	g.JSON(http.StatusOK, "helloworld")
+}
+
 // markdown-to-html
 func MarkdownToHmtl(ctx *gin.Context) {
 	dir, _ := os.Getwd()
@@ -24,7 +38,14 @@ func MarkdownToHmtl(ctx *gin.Context) {
 	util.Success(ctx, nil, "成功")
 }
 
-// 这段可以直接循环 失误了
+// @Tags admin
+// @title Wallhaven_V2
+// @version 1.0
+// @Accept       json
+// @Produce      json
+// @license.name Apache 2.0
+// @BasePath /admin/wallhaven_V2
+// @Router /admin/wallhaven_V2 [post]
 func Wallhaven_V2(ctx *gin.Context) {
 	var wg sync.WaitGroup
 	// defer ants.Release()
@@ -101,7 +122,18 @@ func Wallhaven_V2(ctx *gin.Context) {
 	})
 }
 
-// 获取轮播图
+// @Tags admin
+// @title getBanner
+// @summary 获取轮播图
+// @version 1.0
+// @Accept       json
+// @Produce      json
+// @Param        limit    query     number  true  "数量"
+// @Param        offset   query     number  true  "第几页"
+// @license.name Apache 2.0
+// @BasePath /admin/getBanner
+// @Response 200 {object} ResponseError
+// @Router /admin/getBanner [post]
 func GetBanner(ctx *gin.Context) {
 	DB := global.DB
 	var count int64
@@ -188,7 +220,6 @@ func Wallhaven(ctx *gin.Context) {
 			Find(&model.Banner{}).
 			RowsAffected; RowsAffected > 0 {
 			item["check"] = true
-			fmt.Println("存在")
 		}
 	}
 	if err != nil {
@@ -197,12 +228,12 @@ func Wallhaven(ctx *gin.Context) {
 			"result": err,
 		})
 	}
-	container := make(map[string]interface{})
-	container["count"] = count
-	container["imgs"] = Imgs
 	ctx.JSON(http.StatusOK, gin.H{
-		"code":   http.StatusOK,
-		"result": container,
+		"code": http.StatusOK,
+		"result": map[string]interface{}{
+			"count": count,
+			"imgs":  Imgs,
+		},
 	})
 }
 
