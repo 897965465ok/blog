@@ -11,7 +11,8 @@
       <el-menu mode="horizontal">
         <el-menu-item>
           <div class="top_ver">
-            ©The website was set up on 2021/01/3 . version v1.0
+            <a onclick="window.open('https://beian.miit.gov.cn')" target="_blank">备案号: 桂ICP备2021004482号-1</a>
+            ©The website was set up on 2021/01/3 . version v2.0
           </div>
         </el-menu-item>
       </el-menu>
@@ -47,11 +48,21 @@ export default {
 <style lang="scss" scoped>
 .footer {
   background: #ffffff;
+
   a {
     text-decoration: none;
     font-size: 16px;
+
     &:hover {
       color: #00a8ff;
+    }
+  }
+
+  .top_ver {
+    display: flex;
+
+    a {
+      margin-right: 30px;
     }
   }
 

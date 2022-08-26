@@ -1,8 +1,28 @@
 import axios from 'axios'
-let api = axios.create({
-    // baseURL:"http://146.56.206.160",
+const api = axios.create({
+    timeout: "10000",
 
 })
+
+// 环境的切换
+switch(process.env.NODE_ENV){
+    case "development":{
+        api.defaults.baseURL =   "http://146.56.206.160"
+        break
+    }
+    case "debug":{
+        api.defaults.baseURL =   "http://146.56.206.160"
+        break
+    }
+    case "production":{
+        api.defaults.baseURL =   "http://146.56.206.160"
+        break
+    }
+    default:{
+        api.defaults.baseURL =   "http://146.56.206.160"
+    }
+}
+
 api.interceptors.response.use((config) => {
     let { status, data } = config
     switch (status) {
@@ -31,13 +51,12 @@ api.interceptors.response.use((config) => {
     })
 
 api.interceptors.request.use((config) => {
+
     let token = window.localStorage.getItem("token")
     if (token) {
         config.headers.authorization = token;    //将token放到请求头发送给服务器
-        return config;
-    } else {
-        return config
-    }
+    } 
+    return config;
 }, (error) => {
     return Promise.reject(error);
 });

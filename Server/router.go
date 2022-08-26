@@ -49,11 +49,15 @@ func CollectRouter(r *gin.Engine) *gin.Engine {
 		V1.GET("/articles", controller.QueryAllArticle)
 		// 查询一个文章
 		V1.GET("/article", controller.QueryOneArticle)
+
 		V1.DELETE("/article", controller.DeleteArticle)
+
 		// 创建文章
 		V1.POST("/article", controller.CreateArticle)
+
 		//  根据标签查询分类
 		V1.GET("/query", middleware.AuthMiddleware(), controller.Query)
+
 		// 发送邮件
 		V1.GET("/email", controller.SendEamil)
 		// 添加收藏网站
@@ -67,11 +71,14 @@ func CollectRouter(r *gin.Engine) *gin.Engine {
 
 		//  注册
 		V1.POST("/register", controller.Register)
+
 		// 登陆
 		V1.POST("/login", controller.Login)
 
 		V1.GET("/watchnumber", controller.WatchNumber)
+
 		V1.GET("/like", controller.Like)
+
 		V1.POST("/comment", middleware.AuthMiddleware(), controller.Comment)
 
 		/*以下都是测试接口 */
@@ -86,8 +93,11 @@ func CollectRouter(r *gin.Engine) *gin.Engine {
 		// cookies
 		V1.GET("/cookies", controller.Cookies)
 		V1.GET("/openid", controller.Cookies)
+
 		V1.GET("/comment", middleware.AuthMiddleware(), controller.GetComment)
+
 		V1.POST("/wallhaven2", controller.Wallhaven_V2)
+
 		V1.GET("/oauth", controller.Oauth)
 
 	}
