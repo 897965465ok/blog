@@ -11,7 +11,7 @@
       <el-menu mode="horizontal">
         <el-menu-item>
           <div class="top_ver">
-            <a onclick="window.open('https://beian.miit.gov.cn')" target="_blank">备案号: 桂ICP备2021004482号-1</a>
+            <a   href='https://beian.miit.gov.cn' target="_blank">备案号:  桂ICP备2021004482号-1</a>
             ©The website was set up on 2021/01/3 . version v2.0
           </div>
         </el-menu-item>

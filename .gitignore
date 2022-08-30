@@ -5,6 +5,7 @@ Admin/node_modules
 Server/tmp
 Server/Config
 Server/Logo
+logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
